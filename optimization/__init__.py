@@ -1,0 +1,3 @@
+from fitness_evaluator import FitnessEvaluator
+from individual import Individual
+from individual_factory import IndividualFactory
