@@ -5,15 +5,54 @@ sys.path.insert(0, os.path.abspath('..'))
 
 import ga, optimization, numpy
 
-class IndividualFactory(ga.IndividualFactory):
+class RastriginIndividualFactory(ga.IndividualFactory):
     def __init__(self, crossover_method='one_point'):
-        super(optimization.IndividualFactory, self).__init__()
+        super(optimization.RastriginIndividualFactory, self).__init__()
         self.crossover_method = crossover_method
 
     def create(self):
         """Creates individuals which [x,y] values are uniformly distributed over -5.0 and 5.0."""
         genotype = numpy.random.uniform(low=-5.0, high=5.0, size=2)
-        fitness_evaluator = optimization.FitnessEvaluator()
+        fitness_evaluator = optimization.RastriginFitnessEvaluator()
         return optimization.Individual(genotype, fitness_evaluator, self.crossover_method)
 
-ga.IndividualFactory.register(IndividualFactory)
+ga.IndividualFactory.register(RastriginIndividualFactory)
+
+class XSquareIndividualFactory(ga.IndividualFactory):
+    def __init__(self, crossover_method='one_point'):
+        super(optimization.XSquareIndividualFactory, self).__init__()
+        self.crossover_method = crossover_method
+
+    def create(self):
+        """Creates individuals which [x1,x2,...,x30] values are uniformly distributed over -100.0 and 100.0."""
+        genotype = numpy.random.uniform(low=-100.0, high=100.0, size=30)
+        fitness_evaluator = optimization.XSquareFitnessEvaluator()
+        return optimization.Individual(genotype, fitness_evaluator, self.crossover_method)
+
+ga.IndividualFactory.register(XSquareIndividualFactory)
+
+class XAbsoluteSquareIndividualFactory(ga.IndividualFactory):
+    def __init__(self, crossover_method='one_point'):
+        super(optimization.XAbsoluteSquareIndividualFactory, self).__init__()
+        self.crossover_method = crossover_method
+
+    def create(self):
+        """Creates individuals which [x1,x2,...,x30] values are uniformly distributed over -100.0 and 100.0."""
+        genotype = numpy.random.uniform(low=-100.0, high=100.0, size=30)
+        fitness_evaluator = optimization.XAbsoluteSquareFitnessEvaluator()
+        return optimization.Individual(genotype, fitness_evaluator, self.crossover_method)
+
+ga.IndividualFactory.register(XAbsoluteSquareIndividualFactory)
+
+class SineXSquareRootIndividualFactory(ga.IndividualFactory):
+    def __init__(self, crossover_method='one_point'):
+        super(optimization.SineXSquareRootIndividualFactory, self).__init__()
+        self.crossover_method = crossover_method
+
+    def create(self):
+        """Creates individuals which [x1,x2,...,x30] values are uniformly distributed over -500.0 and 500.0."""
+        genotype = numpy.random.uniform(low=-500.0, high=500.0, size=30)
+        fitness_evaluator = optimization.SineXSquareRootFitnessEvaluator()
+        return optimization.Individual(genotype, fitness_evaluator, self.crossover_method)
+
+ga.IndividualFactory.register(SineXSquareRootIndividualFactory)

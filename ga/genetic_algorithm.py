@@ -3,7 +3,7 @@
 import ga, time, numpy
 
 class GeneticAlgorithm(object):
-    """Represents a genetic algorigthm structure"""
+    """Represents a genetic algorigthm structure."""
     def __init__(self, population_size=100):
         self.population_size = population_size
         self.population = []
@@ -12,17 +12,22 @@ class GeneticAlgorithm(object):
         self.generation = 0
 
     def init_population(self, individual_factory):
-        """Initialize a population of individuals using a provided function"""
+        """Initializes a population of individuals using a provided function."""
         for idx in xrange(0, 100):
             individual = individual_factory.create()
             self.population.append(individual)
 
         self.population_fitness = numpy.asarray(map(lambda individual: individual.get_fitness(), self.population))
-        s = float(self.population_fitness.sum())
-        self.normalized_fitness = numpy.asarray(map(lambda fitness: fitness/s, self.population_fitness))
+
+        # In order to roulette wheel selection work with negative values, 
+        # we sum all fitness values to the absolute value of the most negative
+        most_negative = self.population_fitness.min()
+        self.normalized_fitness = numpy.asarray(map(lambda fitness: fitness+numpy.absolute(most_negative), self.population_fitness))
+        s = float(self.normalized_fitness.sum())
+        self.normalized_fitness = numpy.asarray(map(lambda fitness: fitness/s, self.normalized_fitness))
 
     def evolve(self, termination_criteria, reproduction=0.15, crossover=0.8, mutation=0.05):
-        """Evolves individuals (solutions) until some termination criteria is satisfied"""
+        """Evolves individuals (solutions) until some termination criteria is satisfied;"""
         self.generation = 0
         start_time = time.time()
 
@@ -30,6 +35,7 @@ class GeneticAlgorithm(object):
             self.generation += 1
 
             # select genetic operation probabilistically
+            # this is a roulette wheel selection
             operations = numpy.random.choice(['reproduction', 'crossover', 'mutation'], size=self.population_size, p=[reproduction, crossover, mutation]).tolist()
             individuals = numpy.random.choice(self.population, p=self.normalized_fitness, size=2*self.population_size, replace=True).tolist()
 
@@ -53,21 +59,24 @@ class GeneticAlgorithm(object):
 
             self.population = next_generation
             self.population_fitness = numpy.asarray(map(lambda individual: individual.get_fitness(), self.population))
-            s = float(self.population_fitness.sum())
-            self.normalized_fitness = numpy.asarray(map(lambda fitness: fitness/s, self.population_fitness))
+            most_negative = self.population_fitness.min()
+            self.normalized_fitness = numpy.asarray(map(lambda fitness: fitness-most_negative, self.population_fitness))
+            s = float(self.normalized_fitness.sum())
+            self.normalized_fitness = numpy.asarray(map(lambda fitness: fitness/s, self.normalized_fitness))
 
             self.generation_info.append({
-                "avg": -numpy.mean(self.population_fitness),
-                "std": -numpy.std(self.population_fitness),
-                "max": -self.population_fitness.max()
+                "avg": numpy.mean(self.population_fitness),
+                "std": numpy.std(self.population_fitness),
+                "max": self.population_fitness.max()
             })
 
             #print "Generation: " + str(self.generation)
             #print "Best solution: " + str(self.population[0].get_genotype()) + " => " + str(self.population[0].get_fitness())
 
     def result(self):
-        """Returns one best solution"""
+        """Returns one best solution."""
         return max(self.population, key=lambda individual: individual.get_fitness())
 
     def get_generation_info(self):
+        """Returns maximum fitness, average fitness, and std deviation of each generation."""
         return self.generation_info

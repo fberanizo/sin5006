@@ -3,18 +3,18 @@
 import sys, os
 sys.path.insert(0, os.path.abspath('..'))
 
-import unittest, ga_test_case, ga, optimization, time, matplotlib.pyplot
+import unittest, utils, ga, optimization, time
 
-class Case1(ga_test_case.GATestCase):
+class Rastrigin(unittest.TestCase):
     """
-    Chromosome: array containing x and y values
+    Chromosome: float array containing x and y values
     Selection: roulette-wheel
     Crossover operator: one-point crossover
     Mutation operator: basic (replaces x or y by another valid value)
     Termination criteria: number of generations = 100
 
     Parameters:
-        population_size: 300
+        population_size: [10, 20, 30, 50, 75, 100, 150, 200, 300, 500]
         crossover rate: 0.7
         reproduction rate: 0.2
         mutation rate: 0.1
@@ -23,16 +23,31 @@ class Case1(ga_test_case.GATestCase):
     def test_case1(self):
         start_time = time.time()
 
-        solver = ga.GeneticAlgorithm(population_size=300)
-        solver.init_population(optimization.IndividualFactory(crossover_method='one-point'))
-        solver.evolve(ga.NumberOfGenerationsTerminationCriteria(), reproduction=0.2, crossover=0.7, mutation=0.1)
-        
+        execution_info = []
+        population_size_lst = [10, 100, 500]
 
-        individual = solver.result()
-        genotype = individual.get_genotype()
-        generation_info = solver.get_generation_info()
+        for population_size in population_size_lst:
+            solver = ga.GeneticAlgorithm(population_size=population_size)
+            solver.init_population(optimization.RastriginIndividualFactory(crossover_method='one-point'))
+            solver.evolve(ga.NumberOfGenerationsTerminationCriteria(), reproduction=0.2, crossover=0.7, mutation=0.1)
+            
 
-        #super.plot(generation_info)
+            individual = solver.result()
+            genotype = individual.get_genotype()
+            generation_info = solver.get_generation_info()
+            execution_info.append(generation_info)
+
+
+
+        title = 'Funcao Ratrigin para populacao igual a 10, 100 e 500'
+        description = """
+Chromosome: float array containing x and y values
+Selection: roulette-wheel
+Crossover operator: one-point crossover
+Mutation operator: basic (replaces x or y by another valid value)
+Termination criteria: number of generations = 100"""
+
+        utils.plot(execution_info, title=title, description=description)
 
         print 'Execution time: ' + str(time.time() - start_time)
         print 'Number of generations: ' + str(solver.generation)

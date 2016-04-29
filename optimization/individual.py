@@ -14,7 +14,7 @@ class Individual(ga.Individual):
             self.crossover_method = self.one_point_crossover
 
     def mutate(self):
-        idx = numpy.random.randint(0, 2)
+        idx = numpy.random.randint(0, len(self.genotype))
         value = numpy.random.uniform(low=-5.0, high=5.0)
         numpy.put(self.genotype, [idx], [value])
         self.fitness = self.fitness_evaluator.evaluate(self)
