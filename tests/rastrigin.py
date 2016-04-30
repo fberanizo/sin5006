@@ -24,20 +24,17 @@ class Rastrigin(unittest.TestCase):
         start_time = time.time()
 
         execution_info = []
-        population_size_lst = [10, 100, 500]
+        population_size_lst = [10]
 
         for population_size in population_size_lst:
-            solver = ga.GeneticAlgorithm(population_size=population_size)
-            solver.init_population(optimization.RastriginIndividualFactory(crossover_method='one-point'))
+            solver = ga.GeneticAlgorithm(population_size=population_size, elitism=True)
+            solver.init_population(optimization.RastriginIndividualFactory(crossover_method='one_point', mutation_method='basic_mutation'))
             solver.evolve(ga.NumberOfGenerationsTerminationCriteria(), reproduction=0.2, crossover=0.7, mutation=0.1)
-            
 
             individual = solver.result()
             genotype = individual.get_genotype()
             generation_info = solver.get_generation_info()
             execution_info.append(generation_info)
-
-
 
         title = 'Funcao Ratrigin para populacao igual a 10, 100 e 500'
         description = """
@@ -47,7 +44,7 @@ Crossover operator: one-point crossover
 Mutation operator: basic (replaces x or y by another valid value)
 Termination criteria: number of generations = 100"""
 
-        utils.plot(execution_info, title=title, description=description)
+        #utils.plot(execution_info, title=title, description=description)
 
         print 'Execution time: ' + str(time.time() - start_time)
         print 'Number of generations: ' + str(solver.generation)

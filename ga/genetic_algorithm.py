@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 
-import ga, time, numpy
+import ga, time, numpy, heapq
 
 class GeneticAlgorithm(object):
     """Represents a genetic algorigthm structure."""
-    def __init__(self, population_size=100):
+    def __init__(self, population_size=100, elitism=False):
         self.population_size = population_size
         self.population = []
         self.population_fitness = []
         self.generation_info = []
         self.generation = 0
+        self.elitism = elitism
 
     def init_population(self, individual_factory):
         """Initializes a population of individuals using a provided function."""
@@ -20,9 +21,9 @@ class GeneticAlgorithm(object):
         self.population_fitness = numpy.asarray(map(lambda individual: individual.get_fitness(), self.population))
 
         # In order to roulette wheel selection work with negative values, 
-        # we sum all fitness values to the absolute value of the most negative
+        # we sum all fitness values to the absolute value of the most negative plus one
         most_negative = self.population_fitness.min()
-        self.normalized_fitness = numpy.asarray(map(lambda fitness: fitness+numpy.absolute(most_negative), self.population_fitness))
+        self.normalized_fitness = numpy.asarray(map(lambda fitness: fitness+numpy.absolute(most_negative)+1, self.population_fitness))
         s = float(self.normalized_fitness.sum())
         self.normalized_fitness = numpy.asarray(map(lambda fitness: fitness/s, self.normalized_fitness))
 
@@ -33,13 +34,18 @@ class GeneticAlgorithm(object):
 
         while not termination_criteria.satisfied(self.generation, time.time()-start_time, self.population):
             self.generation += 1
+            next_generation = []
+
+            if self.elitism:
+                # Keeps the 10% best individuals
+                best_individuals = heapq.nlargest(int(0.1*self.population_size), self.population, lambda individual: individual.get_fitness())
+                next_generation += best_individuals
 
             # select genetic operation probabilistically
             # this is a roulette wheel selection
             operations = numpy.random.choice(['reproduction', 'crossover', 'mutation'], size=self.population_size, p=[reproduction, crossover, mutation]).tolist()
             individuals = numpy.random.choice(self.population, p=self.normalized_fitness, size=2*self.population_size, replace=True).tolist()
 
-            next_generation = []
             while len(next_generation) < self.population_size:
                 operation = operations.pop()
                 individual = individuals.pop()
@@ -54,13 +60,13 @@ class GeneticAlgorithm(object):
                     next_generation.append(individual1)
                     next_generation.append(individual2)
                 elif operation == 'mutation':
-                    individual.mutate()
-                    next_generation.append(individual)
+                    individual1 = individual.mutate()
+                    next_generation.append(individual1)
 
             self.population = next_generation
             self.population_fitness = numpy.asarray(map(lambda individual: individual.get_fitness(), self.population))
             most_negative = self.population_fitness.min()
-            self.normalized_fitness = numpy.asarray(map(lambda fitness: fitness-most_negative, self.population_fitness))
+            self.normalized_fitness = numpy.asarray(map(lambda fitness: fitness+numpy.absolute(most_negative)+1, self.population_fitness))
             s = float(self.normalized_fitness.sum())
             self.normalized_fitness = numpy.asarray(map(lambda fitness: fitness/s, self.normalized_fitness))
 
