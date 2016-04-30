@@ -23,3 +23,15 @@ def plot(execution_info, title='', description=''):
     matplotlib.pyplot.gca().set_position((.1, .3, .8, .6))
 
     matplotlib.pyplot.show()
+
+def save_scores(filepath, grid_scores):
+    f = open(filepath, "w")
+    for score in grid_scores:
+        mean_best_fitness = "{:.6f}".format(score["mean_best_fitness"])
+        population_size = str(score["params"]["population_size"])
+        reproduction = "{:.1f}".format(score["params"]["operators_rate"][0])
+        crossover = "{:.1f}".format(score["params"]["operators_rate"][1])
+        mutation = "{:.1f}".format(score["params"]["operators_rate"][2])
+        fields = [mean_best_fitness, population_size, reproduction, crossover, mutation]
+        f.write(",".join(fields) + "\n")
+    f.close()

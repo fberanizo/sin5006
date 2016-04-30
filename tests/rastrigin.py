@@ -3,53 +3,143 @@
 import sys, os
 sys.path.insert(0, os.path.abspath('..'))
 
-import unittest, utils, ga, optimization, time
+import unittest, grid_search, utils, ga, optimization, time, numpy, itertools
 
 class Rastrigin(unittest.TestCase):
-    """
-    Chromosome: float array containing x and y values
-    Selection: roulette-wheel
-    Crossover operator: one-point crossover
-    Mutation operator: basic (replaces x or y by another valid value)
-    Termination criteria: number of generations = 100
-
-    Parameters:
-        population_size: [10, 20, 30, 50, 75, 100, 150, 200, 300, 500]
-        crossover rate: 0.7
-        reproduction rate: 0.2
-        mutation rate: 0.1
+    """Test cases for Ratrigin function. 
+       Elitism, binary and float array chromossomes, different types of crossover and mutation are tested.
     """
 
     def test_case1(self):
-        start_time = time.time()
+        """
+        Chromosome: float array containing x and y values
+        Selection: roulette-wheel
+        Crossover operator: one-point crossover
+        Mutation operator: basic (replaces x or y by another valid value)
+        Elitism is disabled
+        Termination criteria: number of generations = 100
 
-        execution_info = []
-        population_size_lst = [10]
+        Parameters:
+            population_size: [10, 21, 46, 100, 215, 464, 1000, 2154, 4641, 10000]
+                (numbers spaced evenly on a log scale)
+            crossover rate, reproduction rate, mutation rate: varying from 0.0 to 1.0
+                (all possible combinations that sum to 1.0 ex: [0.2, 0.5, 0.3])
+        """
+        print 'Starting test_case1: ONE-POINT CROSSOVER, BASIC MUTATION, ELITISM DISABLED'
 
-        for population_size in population_size_lst:
-            solver = ga.GeneticAlgorithm(population_size=population_size, elitism=True)
-            solver.init_population(optimization.RastriginIndividualFactory(crossover_method='one_point', mutation_method='basic_mutation'))
-            solver.evolve(ga.NumberOfGenerationsTerminationCriteria(), reproduction=0.2, crossover=0.7, mutation=0.1)
+        params = {
+            "population_size": numpy.logspace(1, 4, base=10, num=10, dtype=int),
+            "operators_rate": filter(lambda x: sum(x) == 1.0, itertools.product(numpy.arange(.0, 1.1, .1), repeat=3)),
+            "elitism": [False],
+            "termination_criteria": [ ga.NumberOfGenerationsTerminationCriteria(number_of_generations=100) ]
+        }
+        solver = ga.GeneticAlgorithm(optimization.RastriginIndividualFactory(crossover_method='one_point', mutation_method='basic_mutation'))
+        grid = grid_search.GridSearch(solver, params)
+        grid.search(0.0)
+        grid_scores = grid.get_grid_scores()
 
-            individual = solver.result()
-            genotype = individual.get_genotype()
-            generation_info = solver.get_generation_info()
-            execution_info.append(generation_info)
+        utils.save_scores('/home/fabio/sin5006/tests/results/test_case1.csv', grid_scores)
 
-        title = 'Funcao Ratrigin para populacao igual a 10, 100 e 500'
-        description = """
-Chromosome: float array containing x and y values
-Selection: roulette-wheel
-Crossover operator: one-point crossover
-Mutation operator: basic (replaces x or y by another valid value)
-Termination criteria: number of generations = 100"""
+        print "Finished. Results are at: /home/fabio/sin5006/tests/results/test_case1.csv"
+        assert True
 
-        #utils.plot(execution_info, title=title, description=description)
+    def test_case2(self):
+        """
+        Chromosome: float array containing x and y values
+        Selection: roulette-wheel
+        Crossover operator: one-point crossover
+        Mutation operator: basic (replaces x or y by another valid value)
+        Elitism is enabled
+        Termination criteria: number of generations = 100
 
-        print 'Execution time: ' + str(time.time() - start_time)
-        print 'Number of generations: ' + str(solver.generation)
-        print 'x = ' + str(genotype[0]) + ', y = ' + str(genotype[1])
-        print 'fitness = ' + str(individual.get_fitness()) 
+        Parameters:
+            population_size: [10, 21, 46, 100, 215, 464, 1000, 2154, 4641, 10000]
+                (numbers spaced evenly on a log scale)
+            crossover rate, reproduction rate, mutation rate: varying from 0.0 to 1.0
+                (all possible combinations that sum to 1.0 ex: [0.2, 0.5, 0.3])
+        """
+        print "Starting test_case2: ONE-POINT CROSSOVER, BASIC MUTATION, ELITISM ENABLED"
+
+        params = {
+            "population_size": numpy.logspace(1, 4, base=10, num=10, dtype=int),
+            "operators_rate": filter(lambda x: sum(x) == 1.0, itertools.product(numpy.arange(.0, 1.1, .1), repeat=3)),
+            "elitism": [True],
+            "termination_criteria": [ ga.NumberOfGenerationsTerminationCriteria(number_of_generations=100) ]
+        }
+        solver = ga.GeneticAlgorithm(optimization.RastriginIndividualFactory(crossover_method='one_point', mutation_method='basic_mutation'))
+        grid = grid_search.GridSearch(solver, params)
+        grid.search(0.0)
+        grid_scores = grid.get_grid_scores()
+
+        utils.save_scores('/home/fabio/sin5006/tests/results/test_case2.csv', grid_scores)
+
+        print "Finished. Results are at: /home/fabio/sin5006/tests/results/test_case2.csv"
+        assert True
+
+    def test_case3(self):
+        """
+        Chromosome: float array containing x and y values
+        Selection: roulette-wheel
+        Crossover operator: uniform crossover
+        Mutation operator: basic (replaces x or y by another valid value)
+        Elitism is enabled
+        Termination criteria: number of generations = 100
+
+        Parameters:
+            population_size: [10, 21, 46, 100, 215, 464, 1000, 2154, 4641, 10000]
+                (numbers spaced evenly on a log scale)
+            crossover rate, reproduction rate, mutation rate: varying from 0.0 to 1.0
+                (all possible combinations that sum to 1.0 ex: [0.2, 0.5, 0.3])
+        """
+        print "Starting test_case3: UNIFORM CROSSOVER, BASIC MUTATION, ELITISM ENABLED"
+
+        params = {
+            "population_size": numpy.logspace(1, 4, base=10, num=10, dtype=int),
+            "operators_rate": filter(lambda x: sum(x) == 1.0, itertools.product(numpy.arange(.0, 1.1, .1), repeat=3)),
+            "elitism": [True],
+            "termination_criteria": [ ga.NumberOfGenerationsTerminationCriteria(number_of_generations=100) ]
+        }
+        solver = ga.GeneticAlgorithm(optimization.RastriginIndividualFactory(crossover_method='uniform', mutation_method='basic_mutation'))
+        grid = grid_search.GridSearch(solver, params)
+        grid.search(0.0)
+        grid_scores = grid.get_grid_scores()
+
+        utils.save_scores('/home/fabio/sin5006/tests/results/test_case3.csv', grid_scores)
+
+        print "Finished. Results are at: /home/fabio/sin5006/tests/results/test_case3.csv"
+        assert True
+
+    def test_case4(self):
+        """
+        Chromosome: float array containing x and y values
+        Selection: roulette-wheel
+        Crossover operator: one-point crossover
+        Mutation operator: permutation
+        Elitism is enabled
+        Termination criteria: number of generations = 100
+
+        Parameters:
+            population_size: [10, 21, 46, 100, 215, 464, 1000, 2154, 4641, 10000]
+                (numbers spaced evenly on a log scale)
+            crossover rate, reproduction rate, mutation rate: varying from 0.0 to 1.0
+                (all possible combinations that sum to 1.0 ex: [0.2, 0.5, 0.3])
+        """
+        print 'Starting test_case4: ONE-POINT CROSSOVER, PERMUTATION MUTATION, ELITISM ENABLED'
+
+        params = {
+            "population_size": numpy.logspace(1, 4, base=10, num=10, dtype=int),
+            "operators_rate": filter(lambda x: sum(x) == 1.0, itertools.product(numpy.arange(.0, 1.1, .1), repeat=3)),
+            "elitism": [True],
+            "termination_criteria": [ ga.NumberOfGenerationsTerminationCriteria(number_of_generations=100) ]
+        }
+        solver = ga.GeneticAlgorithm(optimization.RastriginIndividualFactory(crossover_method='one-point', mutation_method='permutation'))
+        grid = grid_search.GridSearch(solver, params)
+        grid.search(0.0)
+        grid_scores = grid.get_grid_scores()
+
+        utils.save_scores('/home/fabio/sin5006/tests/results/test_case4.csv', grid_scores)
+
+        print "Finished. Results are at: /home/fabio/sin5006/tests/results/test_case4.csv"
         assert True
 
 

@@ -2,4 +2,6 @@ from fitness_evaluator import FitnessEvaluator
 from genetic_algorithm import GeneticAlgorithm
 from individual import Individual
 from individual_factory import IndividualFactory
-from termination_criteria import TerminationCriteria, ExecutionTimeTerminationCriteria, NumberOfGenerationsTerminationCriteria
+from termination_criteria import TerminationCriteria
+from termination_criteria import ExecutionTimeTerminationCriteria
+from termination_criteria import NumberOfGenerationsTerminationCriteria

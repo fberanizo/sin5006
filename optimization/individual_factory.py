@@ -22,6 +22,7 @@ class RastriginIndividualFactory(ga.IndividualFactory):
         return optimization.Individual(genotype, fitness_evaluator, self.crossover_method, self.mutation_method)
 
     def basic_mutation(self_individual, individual):
+        """Performs a basic mutation where one value in the chromosome is replaced by another valid value."""
         idx = numpy.random.randint(0, len(individual.genotype))
         value = numpy.random.uniform(low=-5.0, high=5.0)
         numpy.put(individual.genotype, [idx], [value])

@@ -1,21 +1,54 @@
 # -*- coding: utf-8 -*-
 
+import sys, os
+sys.path.insert(0, os.path.abspath('..'))
+
 import ga, time, numpy, heapq
 
 class GeneticAlgorithm(object):
     """Represents a genetic algorigthm structure."""
-    def __init__(self, population_size=100, elitism=False):
+    def __init__(self, individual_factory, population_size=100, reproduction=0.15, crossover=0.8, mutation=0.05, elitism=False, termination_criteria=None):
+        self.individual_factory = individual_factory
         self.population_size = population_size
+        self.reproduction = reproduction
+        self.crossover = crossover
+        self.mutation = mutation
+        self.elitism = elitism
+        if termination_criteria is None:
+            self.termination_criteria = ga.NumberOfGenerationsTerminationCriteria()
+        else:
+            self.termination_criteria = termination_criteria
+
         self.population = []
         self.population_fitness = []
         self.generation_info = []
         self.generation = 0
-        self.elitism = elitism
 
-    def init_population(self, individual_factory):
+    def set_params(self, **params):
+        if params.has_key("population_size"):
+            self.population_size = params["population_size"]
+
+        if params.has_key("operators_rate"):
+            self.reproduction = params["operators_rate"][0]
+            self.crossover = params["operators_rate"][1]
+            self.mutation = params["operators_rate"][2]
+
+        if params.has_key("elitism"):
+            self.elitism = params["elitism"]
+
+        if params.has_key("termination_criteria"):
+            self.termination_criteria = params["termination_criteria"]
+
+        # Reset data
+        self.population = []
+        self.population_fitness = []
+        self.generation_info = []
+        self.generation = 0
+
+    def init_population(self):
         """Initializes a population of individuals using a provided function."""
         for idx in xrange(0, 100):
-            individual = individual_factory.create()
+            individual = self.individual_factory.create()
             self.population.append(individual)
 
         self.population_fitness = numpy.asarray(map(lambda individual: individual.get_fitness(), self.population))
@@ -27,12 +60,12 @@ class GeneticAlgorithm(object):
         s = float(self.normalized_fitness.sum())
         self.normalized_fitness = numpy.asarray(map(lambda fitness: fitness/s, self.normalized_fitness))
 
-    def evolve(self, termination_criteria, reproduction=0.15, crossover=0.8, mutation=0.05):
+    def evolve(self):
         """Evolves individuals (solutions) until some termination criteria is satisfied;"""
         self.generation = 0
         start_time = time.time()
 
-        while not termination_criteria.satisfied(self.generation, time.time()-start_time, self.population):
+        while not self.termination_criteria.satisfied(self.generation, time.time()-start_time, self.population):
             self.generation += 1
             next_generation = []
 
@@ -43,7 +76,7 @@ class GeneticAlgorithm(object):
 
             # select genetic operation probabilistically
             # this is a roulette wheel selection
-            operations = numpy.random.choice(['reproduction', 'crossover', 'mutation'], size=self.population_size, p=[reproduction, crossover, mutation]).tolist()
+            operations = numpy.random.choice(['reproduction', 'crossover', 'mutation'], size=self.population_size, p=[self.reproduction, self.crossover, self.mutation]).tolist()
             individuals = numpy.random.choice(self.population, p=self.normalized_fitness, size=2*self.population_size, replace=True).tolist()
 
             while len(next_generation) < self.population_size:
