@@ -16,8 +16,15 @@ class GridSearch(object):
     def search(self, optimal):
         """Performs a grid search, varying parameters and obtaining fitnesses.
            The GA is repeated for the same parametrization the number of times informed."""
+        
         for idx, params in enumerate(self.params):
-            print "Testing parameters " + str(idx) + " of " + str(self.size) + "."
+            bar_length = 20
+            percent = float(idx) / self.size
+            hashes = '#' * int(round(percent * bar_length))
+            spaces = ' ' * (bar_length - len(hashes))
+            sys.stdout.write("\rPerforming grid search: [{0}] {1}%".format(hashes + spaces, int(round(percent * 100))))
+            sys.stdout.flush()
+
             self.genetic_algorithm.set_params(**params)
             self.genetic_algorithm.init_population()
             self.genetic_algorithm.evolve()
@@ -31,6 +38,9 @@ class GridSearch(object):
 
             mean_best_fitness = numpy.mean(best_fitnesses)
             self.grid_scores.append({"params": params, "mean_best_fitness": mean_best_fitness})
+
+        sys.stdout.write("\rPerforming grid search: [{0}] {1}%\n\n".format(hashes + spaces, int(round(100))))
+        sys.stdout.flush()
 
     def get_grid_scores(self):
         """Returns a list of tuples that have the attributes:

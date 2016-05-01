@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import numpy, matplotlib.pyplot
+import numpy, matplotlib.pyplot, pandas, seaborn
 
 def plot(execution_info, title='', description=''):
 
@@ -26,12 +26,20 @@ def plot(execution_info, title='', description=''):
 
 def save_scores(filepath, grid_scores):
     f = open(filepath, "w")
+    f.write(",".join(["Population", "Operators", "Fitness"]) + "\n")
     for score in grid_scores:
         mean_best_fitness = "{:.6f}".format(score["mean_best_fitness"])
         population_size = str(score["params"]["population_size"])
         reproduction = "{:.1f}".format(score["params"]["operators_rate"][0])
         crossover = "{:.1f}".format(score["params"]["operators_rate"][1])
         mutation = "{:.1f}".format(score["params"]["operators_rate"][2])
-        fields = [mean_best_fitness, population_size, reproduction, crossover, mutation]
+        fields = [population_size, "\"R: "+reproduction+", C: "+crossover +", M: "+mutation+"\"", mean_best_fitness]
         f.write(",".join(fields) + "\n")
     f.close()
+
+def plot_heatmap(filepath, dataset):
+    seaborn.set()
+    h = seaborn.heatmap(dataset, annot=True, linewidths=.5)
+    seaborn.plt.yticks(rotation=0)
+    #seaborn.plt.show()
+    seaborn.plt.savefig(filepath)
