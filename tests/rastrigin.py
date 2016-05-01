@@ -29,7 +29,7 @@ class Rastrigin(unittest.TestCase):
 
         params = {
             "population_size": numpy.logspace(3, 12, base=2, num=8, dtype=int),
-            "operators_rate": filter(lambda x: sum(x) == 1.0, itertools.product(numpy.arange(.0, 1.1, .5), repeat=3)),
+            "operators_rate": filter(lambda x: sum(x) == 1.0, itertools.product(numpy.arange(.0, 1.1, .1), repeat=3)),
             "elitism": [False],
             "termination_criteria": [ ga.NumberOfGenerationsTerminationCriteria(number_of_generations=100) ]
         }
