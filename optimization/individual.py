@@ -36,8 +36,8 @@ class Individual(ga.Individual):
 
     def one_point_crossover(self, another_individual):
         size = len(another_individual.get_genotype())
-        genotype1 = numpy.zeros(size)
-        genotype2 = numpy.zeros(size)
+        genotype1 = numpy.zeros(size, dtype=another_individual.get_genotype().dtype)
+        genotype2 = numpy.zeros(size, dtype=another_individual.get_genotype().dtype)
         idx = numpy.random.randint(1, size)
         numpy.put(genotype1, range(0, idx), another_individual.get_genotype()[0:idx])
         numpy.put(genotype1, range(idx, size), self.get_genotype()[idx:size])
@@ -48,8 +48,8 @@ class Individual(ga.Individual):
 
     def uniform_crossover(self, another_individual):
         size = len(another_individual.get_genotype())
-        genotype1 = numpy.zeros(size)
-        genotype2 = numpy.zeros(size)
+        genotype1 = numpy.zeros(size, dtype=another_individual.dtype)
+        genotype2 = numpy.zeros(size, dtype=another_individual.dtype)
         mask = numpy.random.choice([True,False], size=size)
         not_mask = numpy.logical_not(mask)
         genotype1[mask] = self.get_genotype()[mask]

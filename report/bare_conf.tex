@@ -84,7 +84,9 @@
 % \ifCLASSINFOpdf conditional that works the same way.
 % When switching from latex to pdflatex and vice-versa, the compiler may
 % have to be run twice to clear warning/error messages.
-
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern} % load a font with all the characters
 
 
 
@@ -320,28 +322,17 @@
 % not capitalized unless they are the first or last word of the title.
 % Linebreaks \\ can be used within to get better formatting as desired.
 % Do not put math or special symbols in the title.
-\title{Bare Demo of IEEEtran.cls\\ for IEEE Conferences}
+\title{Trabalho de Algorítmos Genéticos\\ Parte 1}
 
 
 % author names and affiliations
 % use a multiple column layout for up to three different
 % affiliations
-\author{\IEEEauthorblockN{Michael Shell}
-\IEEEauthorblockA{School of Electrical and\\Computer Engineering\\
-Georgia Institute of Technology\\
-Atlanta, Georgia 30332--0250\\
-Email: http://www.michaelshell.org/contact.html}
-\and
-\IEEEauthorblockN{Homer Simpson}
-\IEEEauthorblockA{Twentieth Century Fox\\
-Springfield, USA\\
-Email: homer@thesimpsons.com}
-\and
-\IEEEauthorblockN{James Kirk\\ and Montgomery Scott}
-\IEEEauthorblockA{Starfleet Academy\\
-San Francisco, California 96678--2391\\
-Telephone: (800) 555--1212\\
-Fax: (888) 555--1212}}
+\author{\IEEEauthorblockN{Fábio Beranizo Fontes Lopes}
+\IEEEauthorblockA{Escola de Artes, Ciências e Humanidades (EACH)\\
+Universidade de São Paulo (USP)\\
+Email: f.lopes@usp.br}
+}
 
 % conference papers do not typically use \thanks and this command
 % is locked out in conference mode. If really needed, such as for
@@ -379,8 +370,14 @@ Fax: (888) 555--1212}}
 
 % As a general rule, do not put math, special symbols or citations
 % in the abstract
-\begin{abstract}
-The abstract goes here.
+\begin{}
+Este relatório apresenta a discussão da parte 1 do trabalho de algorítmos 
+genéticos (GA) para a disciplina de Inteligência Computacional. Foi avaliada a 
+utilização de GA para otimização de um conjunto funções. O foco se manteve em 
+analisar o comportamento do algorítmo genético mediante a utilização de 
+diferentes técnicas, operadores e parametrizações.\\
+O trabalho foi desenvolvido utilizando-se a linguagem de programação Python,
+especificamente sua distribuição Anaconda.\\
 \end{abstract}
 
 % no keywords
@@ -400,7 +397,9 @@ The abstract goes here.
 
 
 
-\section{Introduction}
+\section{Funções otimizadas}
+A
+
 % no \IEEEPARstart
 This demo file is intended to serve as a ``starter file''
 for IEEE conference papers produced under \LaTeX\ using
