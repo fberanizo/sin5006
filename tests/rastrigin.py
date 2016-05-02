@@ -205,7 +205,7 @@ class Rastrigin(unittest.TestCase):
             crossover rate, reproduction rate, mutation rate: varying from 0.0 to 1.0
                 (all possible combinations that sum to 1.0 ex: [0.2, 0.5, 0.3])
         """
-        sys.stdout.write("Starting test_case6: ONE-POINT CROSSOVER, BASIC MUTATION, ELITISM DISABLED\n")
+        sys.stdout.write("Starting test_case6: BINARY CHROMOSOME, ONE-POINT CROSSOVER, BASIC MUTATION, ELITISM DISABLED\n")
 
         params = {
             "population_size": numpy.logspace(3, 12, base=2, num=8, dtype=int),

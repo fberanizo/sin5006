@@ -42,7 +42,7 @@ class XSquareFloatFitnessEvaluator(ga.FitnessEvaluator):
     def evaluate(self, individual):
         """Evaluates individual based on sum xi², i=1 to 30 function value."""
         D = 30
-        fitness =  D * len(individual.get_genotype())
+        fitness =  0.0
         for x in individual.get_genotype():
             fitness += numpy.square(x)
         return -fitness
@@ -53,7 +53,7 @@ class XSquareBinaryFitnessEvaluator(ga.FitnessEvaluator):
     def evaluate(self, individual):
         """Evaluates individual based on sum xi², i=1 to 30 function value."""
         D = 30
-        fitness = D * (len(individual.get_genotype())/32)
+        fitness =  0.0
         for idx in xrange(0, len(individual.get_genotype()), 32):
             x = as_float32("".join(map(str, individual.get_genotype()[idx:idx+32])))[0]
             fitness += numpy.square(x)
@@ -65,7 +65,7 @@ class XAbsoluteSquareFloatFitnessEvaluator(ga.FitnessEvaluator):
     def evaluate(self, individual):
         """Evaluates individual based on sum |xi + 0.5|², i=1 to 30 function value."""
         D = 30
-        fitness =  D * len(individual.get_genotype())
+        fitness =  0.0
         for x in individual.get_genotype():
             fitness += numpy.square(numpy.absolute(x + 0.5))
         return -fitness
@@ -76,7 +76,7 @@ class XAbsoluteSquareBinaryFitnessEvaluator(ga.FitnessEvaluator):
     def evaluate(self, individual):
         """Evaluates individual based on sum |xi + 0.5|², i=1 to 30 function value."""
         D = 30
-        fitness = D * (len(individual.get_genotype())/32)
+        fitness =  0.0
         for idx in xrange(0, len(individual.get_genotype()), 32):
             x = as_float32("".join(map(str, individual.get_genotype()[idx:idx+32])))[0]
             fitness += numpy.square(numpy.absolute(x + 0.5))
@@ -88,7 +88,7 @@ class SineXSquareRootFloatFitnessEvaluator(ga.FitnessEvaluator):
     def evaluate(self, individual):
         """Evaluates individual based on sum -xi*sin(sqrt(|xi|)), i=1 to 30 function value."""
         D = 30
-        fitness =  D * len(individual.get_genotype())
+        fitness =  0.0
         for x in individual.get_genotype():
             fitness += numpy.negative(x)*numpy.sin(numpy.sqrt(numpy.absolute(x)))
         return -fitness
@@ -99,7 +99,7 @@ class SineXSquareRootBinaryFitnessEvaluator(ga.FitnessEvaluator):
     def evaluate(self, individual):
         """Evaluates individual based on sum -xi*sin(sqrt(|xi|)), i=1 to 30 function value."""
         D = 30
-        fitness = D * (len(individual.get_genotype())/32)
+        fitness =  0.0
         for idx in xrange(0, len(individual.get_genotype()), 32):
             x = as_float32("".join(map(str, individual.get_genotype()[idx:idx+32])))[0]
             fitness += numpy.negative(x)*numpy.sin(numpy.sqrt(numpy.absolute(x)))
