@@ -87,7 +87,7 @@ class XSquare(unittest.TestCase):
         Selection: roulette-wheel
         Crossover operator: uniform crossover
         Mutation operator: basic (replaces x or y by another valid value)
-        Elitism is enabled
+        Elitism is disabled
         Termination criteria: number of generations = 100
 
         Parameters:
@@ -96,12 +96,12 @@ class XSquare(unittest.TestCase):
             crossover rate, reproduction rate, mutation rate: varying from 0.0 to 1.0
                 (all possible combinations that sum to 1.0 ex: [0.2, 0.5, 0.3])
         """
-        sys.stdout.write("Starting test_case3: UNIFORM CROSSOVER, BASIC MUTATION, ELITISM ENABLED\n")
+        sys.stdout.write("Starting test_case3: UNIFORM CROSSOVER, BASIC MUTATION, ELITISM DISABLED\n")
 
         params = {
             "population_size": numpy.logspace(3, 12, base=2, num=8, dtype=int),
             "operators_rate": filter(lambda x: sum(x) == 1.0, itertools.product(numpy.arange(.0, 1.1, .1), repeat=3)),
-            "elitism": [True],
+            "elitism": [False],
             "termination_criteria": [ ga.NumberOfGenerationsTerminationCriteria(number_of_generations=100) ]
         }
         solver = ga.GeneticAlgorithm(optimization.XSquareFloatIndividualFactory(crossover_method='uniform', mutation_method='basic_mutation'))
@@ -123,7 +123,7 @@ class XSquare(unittest.TestCase):
         Selection: roulette-wheel
         Crossover operator: one-point crossover
         Mutation operator: permutation
-        Elitism is enabled
+        Elitism is disabled
         Termination criteria: number of generations = 100
 
         Parameters:
@@ -132,15 +132,15 @@ class XSquare(unittest.TestCase):
             crossover rate, reproduction rate, mutation rate: varying from 0.0 to 1.0
                 (all possible combinations that sum to 1.0 ex: [0.2, 0.5, 0.3])
         """
-        sys.stdout.write("Starting test_case4: ONE-POINT CROSSOVER, PERMUTATION MUTATION, ELITISM ENABLED\n")
+        sys.stdout.write("Starting test_case4: ONE-POINT CROSSOVER, PERMUTATION MUTATION, ELITISM DISABLED\n")
 
         params = {
             "population_size": numpy.logspace(3, 12, base=2, num=8, dtype=int),
             "operators_rate": filter(lambda x: sum(x) == 1.0, itertools.product(numpy.arange(.0, 1.1, .1), repeat=3)),
-            "elitism": [True],
+            "elitism": [False],
             "termination_criteria": [ ga.NumberOfGenerationsTerminationCriteria(number_of_generations=100) ]
         }
-        solver = ga.GeneticAlgorithm(optimization.XSquareFloatIndividualFactory(crossover_method='one-point', mutation_method='permutation'))
+        solver = ga.GeneticAlgorithm(optimization.XSquareFloatIndividualFactory(crossover_method='one_point', mutation_method='permutation'))
         grid = grid_search.GridSearch(solver, params)
         grid.search(0.0)
         grid_scores = grid.get_grid_scores()
@@ -159,7 +159,7 @@ class XSquare(unittest.TestCase):
         Selection: roulette-wheel
         Crossover operator: one-point crossover
         Mutation operator: basic (replaces x or y by another valid value)
-        Elitism is enabled
+        Elitism is disabled
         Termination criteria: execution_time = 2s
 
         Parameters:
@@ -173,7 +173,7 @@ class XSquare(unittest.TestCase):
         params = {
             "population_size": numpy.logspace(3, 12, base=2, num=8, dtype=int),
             "operators_rate": filter(lambda x: sum(x) == 1.0, itertools.product(numpy.arange(.0, 1.1, .1), repeat=3)),
-            "elitism": [True],
+            "elitism": [False],
             "termination_criteria": [ ga.ExecutionTimeTerminationCriteria(time_in_seconds=2.0) ]
         }
         solver = ga.GeneticAlgorithm(optimization.XSquareFloatIndividualFactory(crossover_method='one_point', mutation_method='basic_mutation'))

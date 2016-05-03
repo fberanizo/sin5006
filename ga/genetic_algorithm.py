@@ -47,7 +47,7 @@ class GeneticAlgorithm(object):
 
     def init_population(self):
         """Initializes a population of individuals using a provided function."""
-        for idx in xrange(0, 100):
+        for idx in xrange(0, self.population_size):
             individual = self.individual_factory.create()
             self.population.append(individual)
 
@@ -65,6 +65,7 @@ class GeneticAlgorithm(object):
         self.generation = 0
         start_time = time.time()
 
+        # while the termination criteria is not satisfied, makes another generation
         while not self.termination_criteria.satisfied(self.generation, time.time()-start_time, self.population):
             self.generation += 1
             next_generation = []

@@ -398,27 +398,24 @@ especificamente sua distribuição Anaconda.\\
 
 
 \section{Funções otimizadas}
-A
+
+\section{Crossover}
+O operador crossover permite a criação de novos indivíduos a partir de organismos pais. Os descendentes possuem genótipo de ambos pais, embora geralmente sejam diferentes. O crossover é uma forma de ampliar o espaço de busca por soluções, porém mantendo-se material genético de boa qualidade de gerações anteriores.
+
+\subsubsection{Crossover de um ponto}
+O crossover de um ponto seleciona aleatoriamente um ponto de crossover nos cromossomos pais e os recombina gerando dois filhos. Este operador favorece a herança de trechos contínuos de cromossomo, o que pode ser bom quando estes trechos guardam algum significado para o fitness.
+
+\subsubsection{Crossover uniforme}
+O crossover uniforme define cada gene de um novo indivíduo copiando-se o valor de um dos pais com uma dada probabilidade. Essa abordagem, ao contrário do crossover de um ponto, quebra trechos contínuos de cromossomo e promove maior diversidade do espaço de busca.
+
+\section{Mutação}
+O operação de mutação 
+
+\subsubsection{Mutação simples}
+
+\subsubsection{Mutação por permutação}
 
 % no \IEEEPARstart
-This demo file is intended to serve as a ``starter file''
-for IEEE conference papers produced under \LaTeX\ using
-IEEEtran.cls version 1.8b and later.
-% You must have at least 2 lines in the paragraph with the drop letter
-% (should never be an issue)
-I wish you the best of success.
-
-\hfill mds
- 
-\hfill August 26, 2015
-
-\subsection{Subsection Heading Here}
-Subsection text here.
-
-
-\subsubsection{Subsubsection Heading Here}
-Subsubsection text here.
-
 
 % An example of a floating figure using the graphicx package.
 % Note that \label must occur AFTER (or within) \caption.

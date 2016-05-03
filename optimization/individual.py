@@ -6,6 +6,7 @@ sys.path.insert(0, os.path.abspath('..'))
 import ga, optimization, numpy
 
 class Individual(ga.Individual):
+    """Represents a solution of a optimization problem."""
     def __init__(self, genotype, fitness_evaluator, crossover_method='one_point', mutation_method='permutation'):
         super(optimization.Individual, self).__init__(genotype, fitness_evaluator)
         if crossover_method == 'one_point':
@@ -24,6 +25,7 @@ class Individual(ga.Individual):
         return self.mutation_method(self)
 
     def permutation(self, individual):
+        """Performs a mutation where two values in the chromosome are swaped."""
         genotype = numpy.array(individual.genotype, copy=True)
         [idx1, idx2] = numpy.random.randint(0, len(genotype), 2)
         aux = individual.genotype[idx1]
@@ -35,6 +37,7 @@ class Individual(ga.Individual):
         return self.crossover_method(another_individual)
 
     def one_point_crossover(self, another_individual):
+        """All data beyond a select index in either individual genotype is swapped between the two parent genotypes."""
         size = len(another_individual.get_genotype())
         genotype1 = numpy.zeros(size, dtype=another_individual.get_genotype().dtype)
         genotype2 = numpy.zeros(size, dtype=another_individual.get_genotype().dtype)
@@ -47,9 +50,10 @@ class Individual(ga.Individual):
         return optimization.Individual(genotype1, self.fitness_evaluator, self.crossover_method, self.mutation_method), optimization.Individual(genotype2, self.fitness_evaluator, self.crossover_method, self.mutation_method)
 
     def uniform_crossover(self, another_individual):
+        """A mask defines from which parent genotype data must be copied."""
         size = len(another_individual.get_genotype())
-        genotype1 = numpy.zeros(size, dtype=another_individual.dtype)
-        genotype2 = numpy.zeros(size, dtype=another_individual.dtype)
+        genotype1 = numpy.zeros(size, dtype=another_individual.get_genotype().dtype)
+        genotype2 = numpy.zeros(size, dtype=another_individual.get_genotype().dtype)
         mask = numpy.random.choice([True,False], size=size)
         not_mask = numpy.logical_not(mask)
         genotype1[mask] = self.get_genotype()[mask]
