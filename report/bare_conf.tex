@@ -81,6 +81,58 @@ posições do vetor de um indivíduo. O genótipo do indivíduo é do tipo:
 Na seção de discussão dos resultados serão avaliadas as vantagens e desvantagens
 de cada abordagem de cromossomo.
 
+\section{Seleção de Indivíduos}
+Foi analisado somente um operador de seleção de indivíduos neste trabalho. O 
+método da roleta foi escolhido por ser de fácil implementação e por apresentar
+bons resultados segundo a literatura. No entanto, durante o desenvolvimento foi
+possível perceber que este operador aumenta o tempo de execução do algorítmo 
+para grandes populações, uma vez que todos os indivíduos participam do sorteio.
+
+\subsection{Método da Roleta}
+O método da roleta leva em consideração o fitness de um indivíduo em relação ao
+fitness total da população. Nesse processo cada indivíduo possui uma 
+probabilidade de ser selecionado (uma fatia da roleta) proporcional ao seu 
+fitness. Embora não garanta que as melhores soluções sobrevivam, este método 
+dá boas probabilidades às soluções
+
+\section{Operadores Genéticos}
+Os indivíduos selecionados passam por um dos 3 tipos principais de operadores 
+genéticos: reprodução, crossover e mutação. \\
+
+\subsection{Crossover}
+O operador crossover permite a criação de novos indivíduos a partir de
+organismos pais. Os descendentes possuem genótipo de ambos pais, embora
+geralmente sejam diferentes. O crossover é uma forma de ampliar o espaço de
+busca por soluções, porém mantendo-se material genético de boa qualidade de 
+gerações anteriores.
+
+\subsubsection{Crossover de um ponto}
+O crossover de um ponto seleciona aleatoriamente um ponto de crossover nos 
+cromossomos pais e os recombina gerando dois filhos. Este operador favorece a 
+herança de trechos contínuos de cromossomo, o que pode ser bom quando estes 
+trechos guardam algum significado para o fitness.
+
+\subsubsection{Crossover uniforme}
+O crossover uniforme define cada gene de um novo indivíduo copiando-se o valor 
+de um de seus pais com uma dada probabilidade. Essa abordagem, ao contrário do 
+crossover de um ponto, quebra trechos contínuos de cromossomo e podendo levar a 
+uma maior diversidade do espaço de busca.
+
+\subsection{Mutação}
+\myworries{TODO}
+
+\subsubsection{Mutação simples}
+\myworries{TODO}
+
+\subsubsection{Mutação por permutação}
+\myworries{TODO}
+
+\section{Elitismo}
+\myworries{TODO}
+
+\section{Critério de Parada}
+\myworries{TODO}
+
 \section{Grid Search}
 O resultado da execução do algorítmo genético está ligado diretamente aos
 parâmetros utilizados. Tais parâmetros podem ser selecionados eficientemente
@@ -91,23 +143,13 @@ da população de indivíduos e probabilidades dos operadores de reprodução,
 crossover e mutação.\\
 
 \myworries{Inserir heatmap da parametrização}
+\myworries{adicionar explicação para as tomadas de decisão sobre a parametrização}
 
 
-\section{Operadores Genéticos}
-Os operadores genéticos fazer coisas\\
+\myworries{descriçao do processo de parametrizaçao e observação de resultados para cada uma das funções a
+serem otimizadas}
 
-\subsection{Crossover}
-O operador crossover permite a criação de novos indivíduos a partir de organismos pais. Os descendentes possuem genótipo de ambos pais, embora geralmente sejam diferentes. O crossover é uma forma de ampliar o espaço de busca por soluções, porém mantendo-se material genético de boa qualidade de gerações anteriores.
-
-\subsubsection{Crossover de um ponto}
-O crossover de um ponto seleciona aleatoriamente um ponto de crossover nos cromossomos pais e os recombina gerando dois filhos. Este operador favorece a herança de trechos contínuos de cromossomo, o que pode ser bom quando estes trechos guardam algum significado para o fitness.
-
-\subsubsection{Crossover uniforme}
-O crossover uniforme define cada gene de um novo indivíduo copiando-se o valor de um dos pais com uma dada probabilidade. Essa abordagem, ao contrário do crossover de um ponto, quebra trechos contínuos de cromossomo e promove maior diversidade do espaço de busca.
-
-
-
-\myworries{}
+\myworries{análise dos resultados de maneira comparativa, considerando cada uma das funções otimizadas}
 
 % An example of a floating figure using the graphicx package.
 % Note that \label must occur AFTER (or within) \caption.
