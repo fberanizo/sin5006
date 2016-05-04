@@ -82,11 +82,12 @@ Na seção de discussão dos resultados serão avaliadas as vantagens e desvanta
 de cada abordagem de cromossomo.
 
 \section{Seleção de Indivíduos}
-Foi analisado somente um operador de seleção de indivíduos neste trabalho. O 
-método da roleta foi escolhido por ser de fácil implementação e por apresentar
-bons resultados segundo a literatura. No entanto, durante o desenvolvimento foi
-possível perceber que este operador aumenta o tempo de execução do algorítmo 
-para grandes populações, uma vez que todos os indivíduos participam do sorteio.
+Somente um operador de seleção de indivíduos foi analisado neste trabalho, o
+método da roleta. Ele operador foi escolhido por ser de fácil implementação e 
+por apresentar bons resultados segundo a literatura. No entanto, durante o 
+desenvolvimento foi possível perceber um problema: este operador aumenta 
+consideravelmente o tempo de execução do algorítmo para grandes populações, uma 
+vez que todos os indivíduos participam do sorteio.
 
 \subsection{Método da Roleta}
 O método da roleta leva em consideração o fitness de um indivíduo em relação ao
@@ -97,7 +98,8 @@ dá boas probabilidades às soluções
 
 \section{Operadores Genéticos}
 Os indivíduos selecionados passam por um dos 3 tipos principais de operadores 
-genéticos: reprodução, crossover e mutação. \\
+genéticos: reprodução, crossover e mutação. Neste trabalho foram analisados
+dois tipos de crossover e dois tipos de mutação, que são descritos abaixo:\\
 
 \subsection{Crossover}
 O operador crossover permite a criação de novos indivíduos a partir de
@@ -106,26 +108,40 @@ geralmente sejam diferentes. O crossover é uma forma de ampliar o espaço de
 busca por soluções, porém mantendo-se material genético de boa qualidade de 
 gerações anteriores.
 
-\subsubsection{Crossover de um ponto}
+\subsubsection{Crossover de um Ponto}
 O crossover de um ponto seleciona aleatoriamente um ponto de crossover nos 
 cromossomos pais e os recombina gerando dois filhos. Este operador favorece a 
 herança de trechos contínuos de cromossomo, o que pode ser bom quando estes 
 trechos guardam algum significado para o fitness.
 
-\subsubsection{Crossover uniforme}
+\subsubsection{Crossover Uniforme}
 O crossover uniforme define cada gene de um novo indivíduo copiando-se o valor 
 de um de seus pais com uma dada probabilidade. Essa abordagem, ao contrário do 
 crossover de um ponto, quebra trechos contínuos de cromossomo e podendo levar a 
 uma maior diversidade do espaço de busca.
 
 \subsection{Mutação}
-\myworries{TODO}
+O operador de mutação permite inserir diversidade genética entre gerações de 
+indivíduos trocando o valor de genes no cromossomo. Com maior variedade genética
+o espaço de busca é ampliado, permitindo sair de situações de mínimo local.
+Entretanto, os experimentos realizados indicaram que este operador deve ser 
+usado com parcimônia, com baixa probabilidade de ocorrer. Nas parametrizações em
+que sua probabilidade foi alta a busca não convergiu para bons valores, mantendo
+quase um comportamento de busca aleatória.
 
-\subsubsection{Mutação simples}
-\myworries{TODO}
+\subsubsection{Mutação Simples}
+A operação de mutação básica consiste em sortear uma posição do cromossomo e 
+substituí-la por um valor aleatório do domínio da solução. Essa operação deve
+manter a solução válida, evitando-se processamento para verificação do 
+cromossomo.
 
-\subsubsection{Mutação por permutação}
-\myworries{TODO}
+\subsubsection{Mutação por Permutação}
+Outro operador avaliado foi a mutação por permutação. Neste tipo de mutação, 
+dois genes do cromossomo são sorteados e trocam de posição entre si. Este tipo 
+de mutação não causou impacto no cromossomo real, uma vez que nas funções 
+avaliadas as variáveis tinham o mesmo peso. No entanto, para o cromossomo 
+binário essa técnica é interessante pois promove mudança significativa dos 
+genes e é executada mais rapidamente que a mutação simples.
 
 \section{Elitismo}
 \myworries{TODO}
@@ -150,6 +166,8 @@ crossover e mutação.\\
 serem otimizadas}
 
 \myworries{análise dos resultados de maneira comparativa, considerando cada uma das funções otimizadas}
+
+\myworries{avaliar se mutação simples é melhor que mutação por permutação, acho que sim por que na função avaliada todas as variáveis impactam igualmente a função no cromossomo real. no cromossomo binário permutação pode ser interessante}
 
 % An example of a floating figure using the graphicx package.
 % Note that \label must occur AFTER (or within) \caption.
