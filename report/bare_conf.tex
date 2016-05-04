@@ -28,10 +28,10 @@ Email: f.lopes@usp.br}
 
 
 \section{Introdução}
-Este relatório apresenta a discussão da parte 1 do trabalho de algorítmos 
-genéticos (GA) para a disciplina de Inteligência Computacional. Foi avaliada a 
-utilização de GA para otimização de um conjunto funções. O foco se manteve em 
-analisar o comportamento do algorítmo mediante a utilização de 
+Este relatório apresenta a discussão da parte 1 do trabalho de algorítmos
+genéticos (GA) para a disciplina de Inteligência Computacional. Foi avaliada a
+utilização de GA para otimização de um conjunto funções. O foco se manteve em
+analisar o comportamento do algorítmo mediante a utilização de
 diferentes técnicas, operadores e parametrizações.\\
 O trabalho foi desenvolvido utilizando a linguagem de programação Python,
 especificamente sua distribuição Anaconda.\\
@@ -39,7 +39,7 @@ especificamente sua distribuição Anaconda.\\
 
 \section{Otimização de Funções}
 O problema da otimização de funções consiste em maximizar ou minimizar uma 
-função matemática através da escolha de valores para as variáveis, 
+função matemática através da escolha de valores para as variáveis,
 respeitando-se o domínio da função.
 Para o trabalho desenvolvido foram selecionadas 4 funções para análise:
 
@@ -58,8 +58,8 @@ Para o trabalho desenvolvido foram selecionadas 4 funções para análise:
 
 \section{Cromossomo}
 Para a representação de uma solução do problema de otimização de funções foi
-necessário utilizar uma estrutura que armazenasse o valor das variáveis da 
-solução. A escolha natural foi adotar vetores como estrutura de dados. Essa 
+necessário utilizar uma estrutura que armazenasse o valor das variáveis da
+solução. A escolha natural foi adotar vetores como estrutura de dados. Essa
 decisão facilitou a implementação dos operadores de crossover e de mutação, além
 de tornar simples o cálculo das funções fitness.
 Cada variável da solução podia assumir um valor real dentro de um domínio. Para
@@ -83,21 +83,21 @@ de cada abordagem de cromossomo.
 
 \section{Seleção de Indivíduos}
 Somente um operador de seleção de indivíduos foi analisado neste trabalho, o
-método da roleta. Ele operador foi escolhido por ser de fácil implementação e 
-por apresentar bons resultados segundo a literatura. No entanto, durante o 
-desenvolvimento foi possível perceber um problema: este operador aumenta 
+método da roleta. Ele operador foi escolhido por ser de fácil implementação e
+por apresentar bons resultados segundo a literatura. No entanto, durante o
+desenvolvimento foi possível perceber um problema: este operador aumenta
 consideravelmente o tempo de execução do algorítmo para grandes populações, uma 
 vez que todos os indivíduos participam do sorteio.
 
 \subsection{Método da Roleta}
 O método da roleta leva em consideração o fitness de um indivíduo em relação ao
 fitness total da população. Nesse processo cada indivíduo possui uma 
-probabilidade de ser selecionado (uma fatia da roleta) proporcional ao seu 
-fitness. Embora não garanta que as melhores soluções sobrevivam, este método 
-dá boas probabilidades às soluções
+probabilidade de ser selecionado (uma fatia da roleta) proporcional ao seu
+fitness. Embora não garanta que as melhores soluções sobrevivam, este método
+dá mairoes probabilidades de sobrevida às soluções com bom fitness.
 
 \section{Operadores Genéticos}
-Os indivíduos selecionados passam por um dos 3 tipos principais de operadores 
+Os indivíduos selecionados passam por um dos 3 tipos principais de operadores
 genéticos: reprodução, crossover e mutação. Neste trabalho foram analisados
 dois tipos de crossover e dois tipos de mutação, que são descritos abaixo:\\
 
@@ -105,48 +105,63 @@ dois tipos de crossover e dois tipos de mutação, que são descritos abaixo:\\
 O operador crossover permite a criação de novos indivíduos a partir de
 organismos pais. Os descendentes possuem genótipo de ambos pais, embora
 geralmente sejam diferentes. O crossover é uma forma de ampliar o espaço de
-busca por soluções, porém mantendo-se material genético de boa qualidade de 
+busca por soluções, porém mantendo-se material genético de boa qualidade de
 gerações anteriores.
 
 \subsubsection{Crossover de um Ponto}
-O crossover de um ponto seleciona aleatoriamente um ponto de crossover nos 
-cromossomos pais e os recombina gerando dois filhos. Este operador favorece a 
-herança de trechos contínuos de cromossomo, o que pode ser bom quando estes 
+O crossover de um ponto seleciona aleatoriamente um ponto de crossover nos
+cromossomos pais e os recombina gerando dois filhos. Este operador favorece a
+herança de trechos contínuos de cromossomo, o que pode ser bom quando estes
 trechos guardam algum significado para o fitness.
 
 \subsubsection{Crossover Uniforme}
-O crossover uniforme define cada gene de um novo indivíduo copiando-se o valor 
-de um de seus pais com uma dada probabilidade. Essa abordagem, ao contrário do 
-crossover de um ponto, quebra trechos contínuos de cromossomo e podendo levar a 
+O crossover uniforme define cada gene de um novo indivíduo copiando-se o valor
+de um de seus pais com uma dada probabilidade. Essa abordagem, ao contrário do
+crossover de um ponto, quebra trechos contínuos de cromossomo e podendo levar a
 uma maior diversidade do espaço de busca.
 
 \subsection{Mutação}
-O operador de mutação permite inserir diversidade genética entre gerações de 
+O operador de mutação permite inserir diversidade genética entre gerações de
 indivíduos trocando o valor de genes no cromossomo. Com maior variedade genética
 o espaço de busca é ampliado, permitindo sair de situações de mínimo local.
-Entretanto, os experimentos realizados indicaram que este operador deve ser 
+Entretanto, os experimentos realizados indicaram que este operador deve ser
 usado com parcimônia, com baixa probabilidade de ocorrer. Nas parametrizações em
 que sua probabilidade foi alta a busca não convergiu para bons valores, mantendo
 quase um comportamento de busca aleatória.
 
 \subsubsection{Mutação Simples}
-A operação de mutação básica consiste em sortear uma posição do cromossomo e 
+A operação de mutação básica consiste em sortear uma posição do cromossomo e
 substituí-la por um valor aleatório do domínio da solução. Essa operação deve
-manter a solução válida, evitando-se processamento para verificação do 
+manter a solução válida, evitando-se processamento para verificação do
 cromossomo.
 
 \subsubsection{Mutação por Permutação}
-Outro operador avaliado foi a mutação por permutação. Neste tipo de mutação, 
-dois genes do cromossomo são sorteados e trocam de posição entre si. Este tipo 
-de mutação não causou impacto no cromossomo real, uma vez que nas funções 
-avaliadas as variáveis tinham o mesmo peso. No entanto, para o cromossomo 
-binário essa técnica é interessante pois promove mudança significativa dos 
+Outro operador avaliado foi a mutação por permutação. Neste tipo de mutação,
+dois genes do cromossomo são sorteados e trocam de posição entre si. Este tipo
+de mutação não causou impacto no cromossomo real, uma vez que nas funções
+avaliadas as variáveis tinham o mesmo peso. No entanto, para o cromossomo
+binário essa técnica é interessante pois promove mudança significativa dos
 genes e é executada mais rapidamente que a mutação simples.
 
 \section{Elitismo}
 \myworries{TODO}
 
 \section{Critério de Parada}
+A evolução do algorítmo genético prossegue até que que um critério de parada
+seja atingido. Neste trabalho foram comparados 2 alternativas para término da
+evolução: número de gerações e tempo de execução. Ambas técnicas não são
+sofisticadas, nem são ótimas do ponto de vista de resultados, no entanto
+permitem realizar uma análise mais adequada dos operadores. Comparando-se
+diferentes parametrizações mediante um mesmo tempo de execução, ou um
+determinado número de gerações é possível avaliar de forma justa as vantagens e
+desvantagens de cada escolha.
+
+\subsection{Número de Gerações}
+Este critério de parada de faz o com o algorítmo prossiga até que um determinado
+número de gerações seja atingido. 
+\myworries{Explicar porque esse critério foi escolhido}
+
+\subsection{Tempo de Execução}
 \myworries{TODO}
 
 \section{Grid Search}
@@ -157,6 +172,7 @@ Este processo é denominado \textit{Grid Search}.
 Para o algorítmo genético desenvolvido, os parâmetros otimizados foram: tamanho 
 da população de indivíduos e probabilidades dos operadores de reprodução, 
 crossover e mutação.\\
+\myworries{explicar como foi criado o grid de parâmetros}
 
 \myworries{Inserir heatmap da parametrização}
 \myworries{adicionar explicação para as tomadas de decisão sobre a parametrização}
