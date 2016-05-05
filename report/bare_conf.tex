@@ -281,14 +281,12 @@ f3(x) & 2958.9352           & 5007.2206           \\ \hline
 
 \begin{figure*}[!t]
 \centering
-\includegraphics[scale=0.7]{f0_elitism}
-\caption{Evolução do algorítimo genético para f0(x) c/ e s/ elitismo}
-\end{figure*}
-
-\begin{figure*}[!t]
-\centering
-\includegraphics[scale=0.7]{f3_permutation}
-\caption{Evolução do algorítimo genético f3(x) c/ mutação simples e permutação}
+\subfloat[Fig. 3: Evolução do algorítimo genético para f0(x) c/ s s/elitismo]{\includegraphics[width=5.0in]{f0_elitism}%
+\label{fig_first_case}}
+\hfil
+\subfloat[Fig. 4: Evolução do algorítimo genético para f3(x) c/ mutação simples e permutação]{\includegraphics[width=5.0in]{f3_permutation}%
+\label{fig_second_case}}
+\label{fig_sim}
 \end{figure*}
 
 \subsection{Operadores de Crossover}
@@ -299,7 +297,7 @@ melhores e para f0 o crossover uniforme foi superior. \\
 De fato, para o cromossomo real nenhum dos operadores escolhidos possui alguma 
 vantagem uma vez que não há esquemas, nem sequências especiamente importantes.\\
 
-\begin{table}[]
+\begin{table}[!htbp]
 \begin{tabular}{|l|l|l|}
 \hline
       & Fit max C. um ponto & Fit max C. uniforme \\ \hline
