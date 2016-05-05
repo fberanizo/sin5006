@@ -6,6 +6,12 @@
 \usepackage[T1]{fontenc}
 \usepackage{lmodern} % load a font with all the characters
 \usepackage{xcolor}
+\usepackage{multicol}
+\usepackage{graphicx}
+\usepackage{subfig}
+\usepackage{lipsum}
+\usepackage{afterpage}
+\graphicspath{ {images/} }
 \newcommand\myworries[1]{\textcolor{red}{#1}}
 
 % correct bad hyphenation here
@@ -43,18 +49,20 @@ função matemática através da escolha de valores para as variáveis,
 respeitando-se o domínio da função.
 Para o trabalho desenvolvido foram selecionadas 4 funções para análise:
 
-\[f(x) = 20 + \sum_{i=1}^{2} x_{i}^{2} - 10\cos(2\pi x_i)\]
+\[max. f_0(x) = 20 + \sum_{i=1}^{2} x_{i}^{2} - 10\cos(2\pi x_i)\]
 \begin{center}intervalo para otimização: [-5, 5]\\\end{center}
 
-\[f(x) = \sum_{i=1}^{30} x_{i}^{2}\]
+\[min. f_1(x) = \sum_{i=1}^{30} x_{i}^{2}\]
 \begin{center}intervalo para otimização: [-100, 100]\\\end{center}
 
-\[f(x) = \sum_{i=1}^{30} \left|x_i + 0.5\right|^{2}\]
+\[min. f_2(x) = \sum_{i=1}^{30} \left|x_i + 0.5\right|^{2}\]
 \begin{center}intervalo para otimização: [-100, 100]\\\end{center}
 
-\[f(x) = \sum_{i=1}^{30} -x_i \sin(\sqrt(\left|x_i\right|))\]
+\[min. f_3(x) = \sum_{i=1}^{30} -x_i \sin(\sqrt(\left|x_i\right|))\]
 \begin{center}intervalo para otimização: [-500, 500]\\\end{center}
 
+Para facilitar a implementação as funções para minimização foram transformadas 
+no oposto e maximizadas.
 
 \section{Cromossomo}
 Para a representação de uma solução do problema de otimização de funções foi
@@ -144,7 +152,12 @@ binário essa técnica é interessante pois promove mudança significativa dos
 genes e é executada mais rapidamente que a mutação simples.
 
 \section{Elitismo}
-\myworries{TODO}
+Em algorítmos genéticos o elitismo é a operação de copiar uma dada proporção dos
+melhores indivíduos para a próxima geração. Esta técnica garante que boas 
+soluções permaneçam na população, evitando-se que o algorítmo deixe de explorar 
+espaços de busca promissores.
+Na solução desenvolvida elitismo foi implementado conservando 10\% dos
+indivíduos com melhor fitness da geração anterior.
 
 \section{Critério de Parada}
 A evolução do algorítmo genético prossegue até que que um critério de parada
@@ -158,32 +171,168 @@ desvantagens de cada escolha.
 
 \subsection{Número de Gerações}
 Este critério de parada de faz o com o algorítmo prossiga até que um determinado
-número de gerações seja atingido. 
-\myworries{Explicar porque esse critério foi escolhido}
+número de gerações seja atingido. Dessa forma é possível comparar quais
+parametrizações convergem mais rapidamente, além de avaliar o quanto são
+propensas a ficar presas em mínimos locais.
 
 \subsection{Tempo de Execução}
-\myworries{TODO}
+No segundo critério avaliado é dado um tempo limite para a execução do
+algorítmo. Este critério é interessante para avaliar quais técnicas são mais
+custosas do ponto de vista de processamento, e quais se sairiam melhor em 
+situação de restrição do tempo disponível. Nos testes realizados foi fixado 
+1 segundo para evolução em cada parametrização.
 
 \section{Grid Search}
 O resultado da execução do algorítmo genético está ligado diretamente aos
 parâmetros utilizados. Tais parâmetros podem ser selecionados eficientemente
-através de uma busca em parametrizações geradas a partir de um \textit{grid}.
-Este processo é denominado \textit{Grid Search}.
+através de uma busca de parametrizações geradas a partir de um \textit{grid}.
+Este processo é denominado \textit{Grid Search}.\\
 Para o algorítmo genético desenvolvido, os parâmetros otimizados foram: tamanho 
 da população de indivíduos e probabilidades dos operadores de reprodução, 
-crossover e mutação.\\
-\myworries{explicar como foi criado o grid de parâmetros}
+crossover e mutação.
 
-\myworries{Inserir heatmap da parametrização}
-\myworries{adicionar explicação para as tomadas de decisão sobre a parametrização}
+\begin{figure*}[!t]
+\centering
+\includegraphics[scale=0.5]{f0_test_grid_search_100_generations}
+\caption{Resultados do Grid Search para f0(x) e 100 gerações}
+\end{figure*}
+
+\begin{figure*}[!t]
+\centering
+\includegraphics[scale=0.5]{f2_test_grid_search_1_second}
+\caption{Resultados do Grid Search para f2(x) e 1 segundo de execução}
+\end{figure*}
 
 
-\myworries{descriçao do processo de parametrizaçao e observação de resultados para cada uma das funções a
-serem otimizadas}
+\subsection{Parâmetros Variados}
+Visando avaliar o comportamento do algorítmo com populações de tamanhos bem 
+distintos, foram testadas 6 possíveis variações de população: de 8 a 4096
+indivíduos dispostos em escala logarítimica.\\
+As probabilidades dos operadores foram variadas de 0.125 a 0.875 em espaços de 
+0.125.\\
+Arbitrariamente foi definido que a escolha da melhor parametrização seria feita 
+utilizando uma configuração base de operadores. Após definida a melhor escolha 
+de parâmetros, os mesmos foram aplicados para outros tipos de operadores, técnicas e 
+cromossomo, e uma análise comparativa foi realizada.
 
-\myworries{análise dos resultados de maneira comparativa, considerando cada uma das funções otimizadas}
+Configuração base de operadores:
+\begin{itemize}
+\item Cromossomo real
+\item Crossover de um ponto
+\item Mutação simples
+\item Não há elitismo
+\end{itemize}
 
-\myworries{avaliar se mutação simples é melhor que mutação por permutação, acho que sim por que na função avaliada todas as variáveis impactam igualmente a função no cromossomo real. no cromossomo binário permutação pode ser interessante}
+Para que os resultados do do \textit{Grid Search} fossem mais confiáveis, cada
+parametrização foi executada 10 vezes. A média dos melhores fitness obtidos nas
+10 execuções foram então dispostas nos gráficos abaixo para avaliação:
+
+Observando-se as figuras 1 e 2 é possível elaborar uma hipótese que há relação direta
+entre o tamanho da população e a convergência do algorítmo para melhores valores.
+De fato, em todos os testes executados, as parametrizações com maior população
+alcançaram melhores resultados. A explicação para este fenômeno é que em
+populações maiores a diversidade genética é maior e consequentemente o espaço de
+busca também. Mesmo no caso da figura 2 em que o tempo de execução para todas
+parametrizações é o mesmo, a população se mostrou mais determinante para obter
+bons resultados que o tempo de execução do algorítmo.\\
+Há no entanto uma ressalva: embora populações maiores contribuam para bons 
+resultados, o tempo de execução do algorítimo é fortemente impactado por este 
+grande número de indivíduos. Dependendo da aplicação isso deve ser levado em 
+consideração.\\
+
+Para as comparações foram fixados os seguintes parâmetros:
+\begin{itemize}
+\item Taxa de reprodução = 0.375
+\item Taxa de crossover = 0.500
+\item Taxa de mutação = 0.125
+\item Tamanho da população = 27
+\end{itemize}
+
+O tamanho da população foi propositalmente mantido não muito grande para que o 
+resultado pudesse convergir mais lentamente.
+
+\section{Operadores e Estratégias}
+Dada a parametrização definida anteriormente, foram avaliados a seguir 
+diferentes operadores e estratégias genéticas.
+
+\subsection{Elitismo}
+A Figura 3 mostra uma comparação das evoluções com e sem elitismo. Analisando os
+resultados é possível perceber que a solução com elitismo evita a perda da melhor 
+solução, que ocorre na versão sem elitismo. Além disso, a aplicação desta técnica
+permitiu que a solução convergisse para melhores valores mais rapidamente.
+
+A tabela 1 mostra valores de fitness obtidos em execuções do algorítmo
+com e sem elitismo:\\
+
+
+\begin{table}[h]
+\begin{tabular}{|l|l|l|}
+\hline
+      & Fit max s/ Elitismo & Fit max c/ Elitismo \\ \hline
+f0(x) & -1.0656             & -1.91               \\ \hline
+f1(x) & -42369.4015         & -27148.6555         \\ \hline
+f2(x) & -49484.2555         & -25797.7171         \\ \hline
+f3(x) & 3172.7526           & 6228.4944           \\ \hline
+\end{tabular}
+\caption*{Tabela 1 - Valores de fitness para evolução c/ e s/ elitismo}
+\end{table}
+
+
+\begin{figure*}[!t]
+\centering
+\includegraphics[scale=0.5]{f0_elitism}
+\caption{Evolução do algorítimo genético c/ e s/ elitismo}
+\end{figure*}
+
+\subsection{Operadores de Crossover}
+O resultado dos operadores de crossover foi parelho nos testes. A tabela 2
+mostra que para as funções f0 e f1 o crossover de um ponto obteve fitness 
+melhores e para f2 e f3 o crossover uniforme foi superior. \\
+De fato, para o cromossomo real nenhum dos operadores escolhidos possui alguma 
+vantagem uma vez que não há esquemas, nem sequências especiamente importantes.\\
+
+\begin{table}[]
+\begin{tabular}{|l|l|l|}
+\hline
+      & Fit max C. um ponto & Fit max C. uniforme \\ \hline
+f0(x) & -1.0656             & -2.2871             \\ \hline
+f1(x) & -42369.4015         & -66625.7284         \\ \hline
+f2(x) & -49484.2555         & -42732.2830         \\ \hline
+f3(x) & 3172.7526           & 3166.0494           \\ \hline
+\end{tabular}
+\caption*{Tabela 2 - Valores de fitness para evolução c/ crossover de um ponto e uniforme}
+\end{table}
+
+\subsection{Operadores de Mutação}
+A Figura 8 mostra a comparação das evoluções dos operadores de mutação básica e
+por permutação. Observando-se os resultados, claramente a mutação simples levou 
+a melhores fitness nas execuções. Conforme discutido anteriormente, este 
+resultado se deve ao fato da Mutação por permutação não alterar o resultado da 
+função fitness para cromossomos reais.\\
+
+\begin{table}[]
+\begin{tabular}{|l|l|l|}
+\hline
+      & Fit max C. um ponto & Fit max C. uniforme \\ \hline
+f0(x) & -1.0656             & -9.1838             \\ \hline
+f1(x) & -42369.4015         & -56952.5563         \\ \hline
+f2(x) & -49484.2555         & -55968.1716         \\ \hline
+f3(x) & 3172.7526           & 2487.9347           \\ \hline
+\end{tabular}
+\caption*{Tabela 3 - Valores de fitness para evolução c/ mutação simples e permutação}
+\end{table}
+
+
+\subsection{Cromossomo Binário}
+O cromossomo binário foi implementado, porém os resultados não foram totalmente 
+analisados devido a problemas nos testes executados. 
+No entanto, é possível supor que sua característica poderia levar a convergência
+exata para o ótimo nas funções f0, f1 e f2, cujo máximo global é zero.
+Além disso, o uso do operador de permutação se tornaria mais relevante,
+inserindo variedade genética para a função avaliada.
+O operador de crossover uniforme por sua vez se comportaria como quase que uma 
+mutação, uma vez que modificaria significantemente a composição dos valores das 
+variáveis.
 
 % An example of a floating figure using the graphicx package.
 % Note that \label must occur AFTER (or within) \caption.
@@ -280,23 +429,9 @@ serem otimizadas}
 % \fnbelowfloat command of the stfloats package.
 
 
-
-
-\section{Conclusion}
-The conclusion goes here.
-
-
-
-
 % conference papers do not normally have an appendix
 
-
 % use section* for acknowledgment
-\section*{Acknowledgment}
-
-
-The authors would like to thank...
-
 
 
 
@@ -325,9 +460,12 @@ The authors would like to thank...
 % (used to reserve space for the reference number labels box)
 \begin{thebibliography}{1}
 
-\bibitem{IEEEhowto:kopka}
-H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
-  0.5em minus 0.4em\relax Harlow, England: Addison-Wesley, 1999.
+\bibitem{}
+S. Peres, Buscas - Inteligência Artificial, Apresentação realizada durante a disciplina SIN5002. 10 mar 2016.
+
+
+\bibitem{}
+S. Russell and P. Norvig, Artificial intelligence. Englewood Cliffs, N.J.: Prentice Hall, 1995.
 
 \end{thebibliography}
 

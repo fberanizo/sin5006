@@ -3,7 +3,7 @@
 import sys, os
 sys.path.insert(0, os.path.abspath('..'))
 
-import ga, time, numpy, heapq
+import ga, time, numpy, heapq, pandas, copy
 
 class GeneticAlgorithm(object):
     """Represents a genetic algorigthm structure."""
@@ -21,7 +21,7 @@ class GeneticAlgorithm(object):
 
         self.population = []
         self.population_fitness = []
-        self.generation_info = []
+        self.generation_info = pandas.DataFrame([], columns=["generation", "mean", "max", "std"])
         self.generation = 0
 
     def set_params(self, **params):
@@ -42,7 +42,7 @@ class GeneticAlgorithm(object):
         # Reset data
         self.population = []
         self.population_fitness = []
-        self.generation_info = []
+        self.generation_info = pandas.DataFrame([], columns=["generation", "mean", "max", "std"])
         self.generation = 0
 
     def init_population(self):
@@ -73,7 +73,7 @@ class GeneticAlgorithm(object):
             if self.elitism:
                 # Keeps the 10% best individuals
                 best_individuals = heapq.nlargest(int(0.1*self.population_size), self.population, lambda individual: individual.get_fitness())
-                next_generation += best_individuals
+                next_generation += copy.deepcopy(best_individuals)
 
             # select genetic operation probabilistically
             # this is a roulette wheel selection
@@ -104,14 +104,12 @@ class GeneticAlgorithm(object):
             s = float(self.normalized_fitness.sum())
             self.normalized_fitness = numpy.asarray(map(lambda fitness: fitness/s, self.normalized_fitness))
 
-            self.generation_info.append({
-                "avg": numpy.mean(self.population_fitness),
-                "std": numpy.std(self.population_fitness),
-                "max": self.population_fitness.max()
-            })
+            mean = numpy.mean(self.population_fitness)
+            std = numpy.std(self.population_fitness)
+            max = self.population_fitness.max()
 
-            #print "Generation: " + str(self.generation)
-            #print "Best solution: " + str(self.population[0].get_genotype()) + " => " + str(self.population[0].get_fitness())
+            info_mean = pandas.DataFrame([[self.generation, mean, max, std]], columns=["generation", "mean", "max", "std"])
+            self.generation_info = self.generation_info.append(info_mean, ignore_index=True)
 
     def result(self):
         """Returns one best solution."""
