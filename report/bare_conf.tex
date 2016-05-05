@@ -9,7 +9,6 @@
 \usepackage{multicol}
 \usepackage{graphicx}
 \usepackage{subfig}
-\usepackage{lipsum}
 \usepackage{afterpage}
 \graphicspath{ {images/} }
 \newcommand\myworries[1]{\textcolor{red}{#1}}
@@ -282,8 +281,14 @@ f3(x) & 2958.9352           & 5007.2206           \\ \hline
 
 \begin{figure*}[!t]
 \centering
-\includegraphics[scale=0.5]{f0_elitism}
-\caption{Evolução do algorítimo genético c/ e s/ elitismo}
+\includegraphics[scale=0.7]{f0_elitism}
+\caption{Evolução do algorítimo genético para f0(x) c/ e s/ elitismo}
+\end{figure*}
+
+\begin{figure*}[!t]
+\centering
+\includegraphics[scale=0.7]{f3_permutation}
+\caption{Evolução do algorítimo genético f3(x) c/ mutação simples e permutação}
 \end{figure*}
 
 \subsection{Operadores de Crossover}
@@ -308,10 +313,14 @@ f3(x) & 2958.9352           & 1204.0767           \\ \hline
 
 \subsection{Operadores de Mutação}
 A Tabela 3 mostra a comparação das evoluções dos operadores de mutação básica e
-por permutação. Observando-se os resultados, claramente a mutação simples levou 
+por permutação. Observando-se os resultados, a mutação simples levou 
 a melhores fitness nas execuções. Conforme discutido anteriormente, este 
-resultado se deve ao fato da Mutação por permutação não alterar o resultado da 
+resultado se deve ao fato da mutação por permutação não alterar o resultado da 
 função fitness para cromossomos reais.\\
+A figura 4 mostra o comportamento das evoluções de f3(x) para permutação e mutação
+simples. É possível perceber que a mutação simples diversificou mais o espaço de busca
+e provocou mais saltos no fitness. No entanto, por não estar aliada a uma técnica de elitismo,
+os bons resultados alcançados acabaram perdidos com a evolução.
 
 \begin{table}[]
 \begin{tabular}{|l|l|l|}
