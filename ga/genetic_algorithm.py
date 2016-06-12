@@ -3,7 +3,7 @@
 import sys, os
 sys.path.insert(0, os.path.abspath('..'))
 
-import ga, time, numpy, heapq, pandas, copy
+import ga, time, numpy, heapq, pandas, copy, math
 
 class GeneticAlgorithm(object):
     """Represents a genetic algorigthm structure."""
@@ -56,9 +56,12 @@ class GeneticAlgorithm(object):
         # In order to roulette wheel selection work with negative values, 
         # we sum all fitness values to the absolute value of the most negative plus one
         most_negative = self.population_fitness.min()
-        self.normalized_fitness = numpy.asarray(map(lambda fitness: fitness+numpy.absolute(most_negative)+1, self.population_fitness))
+        self.normalized_fitness = numpy.asarray(map(lambda fitness: 1/math.pow(fitness+numpy.absolute(most_negative)+1, 3), self.population_fitness))
         s = float(self.normalized_fitness.sum())
         self.normalized_fitness = numpy.asarray(map(lambda fitness: fitness/s, self.normalized_fitness))
+        #print self.population_fitness.min()
+        #print self.population_fitness
+        #print self.normalized_fitness
 
     def evolve(self):
         """Evolves individuals (solutions) until some termination criteria is satisfied;"""
@@ -68,6 +71,7 @@ class GeneticAlgorithm(object):
         # while the termination criteria is not satisfied, makes another generation
         while not self.termination_criteria.satisfied(self.generation, time.time()-start_time, self.population):
             self.generation += 1
+            print str(self.generation)
             next_generation = []
 
             if self.elitism:
@@ -100,20 +104,20 @@ class GeneticAlgorithm(object):
             self.population = next_generation
             self.population_fitness = numpy.asarray(map(lambda individual: individual.get_fitness(), self.population))
             most_negative = self.population_fitness.min()
-            self.normalized_fitness = numpy.asarray(map(lambda fitness: fitness+numpy.absolute(most_negative)+1, self.population_fitness))
+            self.normalized_fitness = numpy.asarray(map(lambda fitness: 1/math.pow(fitness+numpy.absolute(most_negative)+1, 3), self.population_fitness))
             s = float(self.normalized_fitness.sum())
             self.normalized_fitness = numpy.asarray(map(lambda fitness: fitness/s, self.normalized_fitness))
 
             mean = numpy.mean(self.population_fitness)
             std = numpy.std(self.population_fitness)
-            max = self.population_fitness.max()
+            min = self.population_fitness.min()
 
-            info_mean = pandas.DataFrame([[self.generation, mean, max, std]], columns=["generation", "mean", "max", "std"])
+            info_mean = pandas.DataFrame([[self.generation, mean, min, std]], columns=["generation", "mean", "min", "std"])
             self.generation_info = self.generation_info.append(info_mean, ignore_index=True)
 
     def result(self):
         """Returns one best solution."""
-        return max(self.population, key=lambda individual: individual.get_fitness())
+        return min(self.population, key=lambda individual: individual.get_fitness())
 
     def get_generation_info(self):
         """Returns maximum fitness, average fitness, and std deviation of each generation."""
