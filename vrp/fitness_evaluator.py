@@ -35,7 +35,7 @@ class VRPFitnessEvaluator(ga.FitnessEvaluator):
                 capacity -= self.demand[current]
                 # if demand is greater than vehicle capacity, fitness is made too big
                 if capacity < 0:
-                    fitness += 1000000
+                    fitness += 10000
                 previous = current
             i += 1
         fitness += self.distances.item((previous-1, 0))

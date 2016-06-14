@@ -21,7 +21,7 @@ class GeneticAlgorithm(object):
 
         self.population = []
         self.population_fitness = []
-        self.generation_info = pandas.DataFrame([], columns=["generation", "mean", "max", "std"])
+        self.generation_info = pandas.DataFrame([], columns=["generation", "mean", "min", "std"])
         self.generation = 0
 
     def set_params(self, **params):
@@ -42,7 +42,7 @@ class GeneticAlgorithm(object):
         # Reset data
         self.population = []
         self.population_fitness = []
-        self.generation_info = pandas.DataFrame([], columns=["generation", "mean", "max", "std"])
+        self.generation_info = pandas.DataFrame([], columns=["generation", "mean", "min", "std"])
         self.generation = 0
 
     def init_population(self):
@@ -71,7 +71,7 @@ class GeneticAlgorithm(object):
         # while the termination criteria is not satisfied, makes another generation
         while not self.termination_criteria.satisfied(self.generation, time.time()-start_time, self.population):
             self.generation += 1
-            print str(self.generation)
+            #print str(self.generation)
             next_generation = []
 
             if self.elitism:
@@ -120,5 +120,5 @@ class GeneticAlgorithm(object):
         return min(self.population, key=lambda individual: individual.get_fitness())
 
     def get_generation_info(self):
-        """Returns maximum fitness, average fitness, and std deviation of each generation."""
+        """Returns minimun fitness, average fitness, and std deviation of each generation."""
         return self.generation_info

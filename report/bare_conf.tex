@@ -67,7 +67,9 @@ Durante o desenvolvimento da solução, foi detectado que a aplicação dos oper
 
 Para contornar este problema uma primeira abordagem tomada foi repetir a realização do crossover por quantas vezes quanto necessário até que seja gerado um crossover válido. No entanto após a realização de testes esta possibilidade foi descartada, uma vez que demorava muito até que surgisse uma solução válida. Além disso, muito recurso computacional era disperdiçado, fazendo com que essa solução fosse inviável. Assim, foi necessário buscar alternativas na literatura para resolver o problema.
 
-A primeira solução adotada foi não realizar crossover.
+% We also have to permutate the parents to find the fittings ones, and it is not sure, that we will find them. This is also rather time consuming and resource consuming
+
+A primeira solução adotada foi não realizar crossover. Foram analizadas diferentes combinações de população e porcentagens de reprodução e de mutação. Esta abordagem foi capaz de gerar soluções factíveis, porém a qualidade foi muito aleatória em cada execução.
 
 % For peer review papers, you can put extra information on the cover
 % page as needed:
