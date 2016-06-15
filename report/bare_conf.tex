@@ -175,6 +175,19 @@ insertCust(cust, bestInd)
 return offspring
 \end{verbatim}
 
+\section{Simple Random Crossover}
+The Simple Random Crossover (SRC) is the most simple one of the four crossover operators and it mostly depends on random decisions. In words, the operator randomly selects a subroute from P2 and inserts it into P1. The pseudo code is the following:
+
+\begin{verbatim}
+SRCrossover(P1,P2)
+copy individual P1 into offspring
+randomly select a subroute from P2
+delete the members of the subroute from the offspring
+bestInd <- BestInsertion(offspring, subroute)
+insertSubRoute(offspring, bestInd, subroute)
+return offspring
+\end{verbatim}
+
 \section{Função Fitness}
 
 \section{Operador de Reparação}
