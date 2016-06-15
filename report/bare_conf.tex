@@ -18,7 +18,7 @@
 
 \begin{document}
 
-\title{Trabalho de Algorítmos Genéticos\\ Parte 1}
+\title{Trabalho de Algorítmos Genéticos\\ Parte 2}
 
 
 \author{\IEEEauthorblockN{Fábio Beranizo Fontes Lopes}
@@ -35,7 +35,7 @@ Email: f.lopes@usp.br}
 \begin{abstract}
 Este relatório apresenta a discussão da parte 2  do trabalho de algorítmos
 genéticos (GA) para a disciplina de Inteligência Computacional. Foi avaliada a
-utilização de GA para otimização de um conjunto funções. O foco se manteve em
+utilização de GA para roteamento de veículos. O foco se manteve em
 analisar o comportamento do algorítmo mediante a utilização de
 diferentes técnicas, operadores e parametrizações.\\
 O trabalho foi desenvolvido utilizando a linguagem de programação Python,
@@ -43,6 +43,88 @@ especificamente sua distribuição Anaconda.\\
 \end{abstract}
 
 % no keywords
+
+\section{Problema de Roteamento de Veículos}
+O problema de roteamento de veículos (VRP) é o nome dado a uma classe de problemas em que rotas de veículos são otimizadas para servir um grupo de clientes. Determinar a solução ótima é um problema NP-difícil, assim é limitado o tamanho das instâncias que tem solução ótima rapidamente calculada. Isto tudo faz deste um problema interessante para ser solucionado por heurísticas, como o algoritmo genético utilizado neste trabalho.\\
+
+Existem muitas variações para o VRP:
+\begin{itemize}
+\item CVRP (Capacitated VRP): os veículos possuem capacidade limitada
+\item VRPTW (VRP with time windows): cada cliente tem que ser atendido dentro de uma janela de tempo
+\item MDVRP (Mutliple Depot VRP): múltiplos depósitos são usados para atender os clientes
+\item VRPPD (VRP with Pick-up and Delivering): clientes podem devolver produtos para o depósito
+\item SDVRP (Split Delivery VRP): mais de um veículo pode atender um cliente
+\item PVRP (Periodic VRP): as entregas podem ser feitas em alguns dias
+\item OVRP (Open VRP): os veículos não precisam voltar ao depósito
+\end{itemize}
+
+Neste trabalho a variação de VRP avaliada foi o CVRP. Neste problema, uma quantidade de veículos com capacidade uniforme deve servir demandas de clientes com custo mínimo de deslocamento. Uma descrição mais formal deste problema se encontra a seguir:\\
+
+Objetivo: Minimizar a frota de veículos e a soma das distâncias de viagem. A demanda total para cada rota 
+não pode exceder a capacidade do veículo que serve essa rota.
+
+Factibilidade: A solução é factível se a demanda total atribuída a cada rota não excede a capacidade do veículo que serve à rota.
+
+Formulação:
+\begin{itemize}
+    \item Seja $V = \{v_{0}, v_{1},\ldots , v_{n}\}$ um conjunto de vértices tal que:
+    \begin{itemize}
+    \item Um depósito está localizado em $v_{0}$
+    \item $V' = V \backslash \{v_{0}\}$ é um conjunto de $n$ clientes
+    \end{itemize}
+
+\item $A_ij = {(v_i,v_j)/v_i,v_j \in V}$ é um conjunto de arestas.
+\item $C$ é uma matriz de distâncias não negativas $c_{ij}$ entre clientes $v_i$ e $v_j$
+\item $d$ é um vetor de demandas de clientes
+\item $R_{i}$ é a rota para o veículo $i$
+\item $m$ é o número de veículos. Cada rota é atribuída a cada veículo
+\item $Q$ é a capacidade de um veículo
+\end{itemize}
+
+Uma solução factível é composta de:
+\begin{itemize}
+\item uma partição ${R_{1},\ldots ,R_{m}}$ de $V$
+\item uma permutação $\sigma_{i}$ de $R_{i}\bigcup {0}$ especificando a ordem dos clientes na rota $i$
+\end{itemize}
+
+O custo de uma dada rota ($R_i = \{v_0,v_1,...,v_{m+1}\}$), onde $v_i \in V$ e $v_0 = v_{m+1} = 0$, é dado por: $F(R_{i})=\sum_{i=0}^{m} c_{i,i+1} + \sum_{i=1}^{m} \delta _{i}$. 
+
+A demanda total de todos os clientes servidos em uma rota $R_{i}$ não excede a capacidade do veículo $Q$: $\sum_{i=1}^{m} d_{i} \leq Q$.
+
+\section{Algoritmo Genético}
+
+\section{Seleção de Indivíduos}
+Somente um operador de seleção de indivíduos foi analisado neste trabalho, o
+método da roleta. Ele operador foi escolhido por ser de fácil implementação e
+por apresentar bons resultados segundo a literatura. No entanto, durante o
+desenvolvimento foi possível perceber um problema: este operador aumenta
+consideravelmente o tempo de execução do algorítmo para grandes populações, uma 
+vez que todos os indivíduos participam do sorteio.
+
+\subsection{Método da Roleta}
+O método da roleta leva em consideração o fitness de um indivíduo em relação ao
+fitness total da população. Nesse processo cada indivíduo possui uma 
+probabilidade de ser selecionado (uma fatia da roleta) proporcional ao seu
+fitness. Embora não garanta que as melhores soluções sobrevivam, este método
+dá maiores probabilidades de sobrevida às soluções com bom fitness.
+
+\section{Operadores Genéticos}
+Os indivíduos selecionados passam por um dos 3 tipos de operadores
+genéticos: reprodução, crossover e mutação. Neste trabalho foram analisados
+dois tipos de crossover e dois tipos de mutação, que são descritos abaixo:\\
+
+\subsection{Crossover}
+O operador crossover permite a criação de novos indivíduos a partir de
+organismos pais. Os descendentes possuem genótipo de ambos pais, embora
+geralmente sejam diferentes. O crossover é uma forma de ampliar o espaço de
+busca por soluções, porém mantendo-se material genético de boa qualidade de
+gerações anteriores.
+
+
+\section{Instâncias de Teste}
+As instâncias de teste utilizadas foram obtidas a partir do site http://www.bernabe.dorronsoro.es/vrp/. Os grupos 
+
+%augeral et. al, etc...
 
 
 \section{Operadores Clássicos}
@@ -70,6 +152,8 @@ Para contornar este problema uma primeira abordagem tomada foi repetir a realiza
 % We also have to permutate the parents to find the fittings ones, and it is not sure, that we will find them. This is also rather time consuming and resource consuming
 
 A primeira solução adotada foi não realizar crossover. Foram analizadas diferentes combinações de população e porcentagens de reprodução e de mutação. Esta abordagem foi capaz de gerar soluções factíveis, porém a qualidade foi muito aleatória em cada execução.
+
+\section{Função Fitness}
 
 % For peer review papers, you can put extra information on the cover
 % page as needed:
