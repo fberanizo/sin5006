@@ -3,7 +3,7 @@
 import sys, os
 sys.path.insert(0, os.path.abspath('../..'))
 
-import unittest, ga, vrp, re, math, numpy, matplotlib.pyplot as plt
+import unittest, ga, cvrp, re, math, numpy, matplotlib.pyplot as plt
 
 class ClassicalOperators(unittest.TestCase):
     """Test cases for CVRP problem."""
@@ -12,7 +12,7 @@ class ClassicalOperators(unittest.TestCase):
         """
         Chromosome: sequence of clients separed by an 'X' when a new vehicle is assigned
         Selection: roulette-wheel
-        Crossover operator: -
+        Crossover operator: one-point
         Mutation operator: permutation
         Elitism is enabled
         Termination criteria: number of generations = 1000
@@ -22,8 +22,8 @@ class ClassicalOperators(unittest.TestCase):
             crossover rate: 0
             mutation rate: 0.5
         """
-        sys.stdout.write("Starting test_1: ZERO CROSSOVER, PERMUTATION MUTATION, ELITISM ENABLED\n")
-        sys.stdout.write("Input: ./tests/vrp/A-n32-k5.vrp\n")
+        sys.stdout.write("Starting test_1: CLASSICAL OPERATORS, ELITISM ENABLED\n")
+        sys.stdout.write("Input: ./tests/cvrp/A-n32-k5.vrp\n")
 
         fname = './input/A-n32-k5.vrp'
         nodes, capacity, distances, demand = self.load_test(fname)
@@ -33,13 +33,13 @@ class ClassicalOperators(unittest.TestCase):
         mutation = 0.5
         population_size = 97
 
-        individual_factory = vrp.VRPIndividualFactory(nodes, capacity, distances, demand, crossover_method='one_point', mutation_method='permutation')
+        individual_factory = cvrp.CVRPIndividualFactory(nodes, capacity, distances, demand, 'classical')
         termination_criteria = ga.NumberOfGenerationsTerminationCriteria(number_of_generations=1000)
         solver = ga.GeneticAlgorithm(individual_factory, population_size=population_size, reproduction=reproduction, crossover=crossover, mutation=mutation, elitism=True, termination_criteria=termination_criteria)
         solver.init_population()
         solver.evolve()
         info = solver.get_generation_info()
-        fname = './results/zero_crossover/A-n32-k5.vrp.csv'
+        fname = './results/classical_operators/A-n32-k5.vrp.csv'
         info.to_csv(fname, sep=',', index=False)
 
         plt.plot(info['generation'], info['min'], "r", label="melhor", linewidth=2)
@@ -51,14 +51,14 @@ class ClassicalOperators(unittest.TestCase):
         plt.ylabel("fitness")
         plt.show()
 
-        sys.stdout.write("Finished. Results are at: ./results/zero_crossover/A-n32-k5.vrp.csv\n")
+        sys.stdout.write("Finished. Results are at: ./results/classical_operators/A-n32-k5.vrp.csv\n")
         assert True
 
     def test_2(self):
         """
         Chromosome: sequence of clients separed by an 'X' when a new vehicle is assigned
         Selection: roulette-wheel
-        Crossover operator: -
+        Crossover operator: one-point
         Mutation operator: permutation
         Elitism is enabled
         Termination criteria: number of generations = 1000
@@ -68,7 +68,7 @@ class ClassicalOperators(unittest.TestCase):
             crossover rate: 0
             mutation rate: 0.5
         """
-        sys.stdout.write("Starting test_1: ZERO CROSSOVER, PERMUTATION MUTATION, ELITISM ENABLED\n")
+        sys.stdout.write("Starting test_2: CLASSICAL OPERATORS, ELITISM ENABLED\n")
         sys.stdout.write("Input: ./tests/vrp/B-n31-k5.vrp\n")
 
         fname = './input/B-n31-k5.vrp'
@@ -79,13 +79,13 @@ class ClassicalOperators(unittest.TestCase):
         mutation = 0.5
         population_size = 97
 
-        individual_factory = vrp.VRPIndividualFactory(nodes, capacity, distances, demand, crossover_method='one_point', mutation_method='permutation')
+        individual_factory = cvrp.CVRPIndividualFactory(nodes, capacity, distances, demand)
         termination_criteria = ga.NumberOfGenerationsTerminationCriteria(number_of_generations=1000)
         solver = ga.GeneticAlgorithm(individual_factory, population_size=population_size, reproduction=reproduction, crossover=crossover, mutation=mutation, elitism=True, termination_criteria=termination_criteria)
         solver.init_population()
         solver.evolve()
         info = solver.get_generation_info()
-        fname = './results/zero_crossover/B-n31-k5.vrp.csv'
+        fname = './results/classical_operators/B-n31-k5.vrp.csv'
         info.to_csv(fname, sep=',', index=False)
 
         plt.plot(info['generation'], info['min'], "r", label="melhor", linewidth=2)
@@ -97,14 +97,14 @@ class ClassicalOperators(unittest.TestCase):
         plt.ylabel("fitness")
         plt.show()
 
-        sys.stdout.write("Finished. Results are at: ./results/zero_crossover/B-n31-k5.vrp.csv\n")
+        sys.stdout.write("Finished. Results are at: ./results/classical_operators/B-n31-k5.vrp.csv\n")
         assert True
 
     def test_3(self):
         """
         Chromosome: sequence of clients separed by an 'X' when a new vehicle is assigned
         Selection: roulette-wheel
-        Crossover operator: -
+        Crossover operator: one-point
         Mutation operator: permutation
         Elitism is enabled
         Termination criteria: number of generations = 1000
@@ -114,7 +114,7 @@ class ClassicalOperators(unittest.TestCase):
             crossover rate: 0
             mutation rate: 0.5
         """
-        sys.stdout.write("Starting test_1: ZERO CROSSOVER, PERMUTATION MUTATION, ELITISM ENABLED\n")
+        sys.stdout.write("Starting test_3: CLASSICAL OPERATORS, ELITISM ENABLED\n")
         sys.stdout.write("Input: ./tests/vrp/P-n16-k8.vrp\n")
 
         fname = './input/P-n16-k8.vrp'
@@ -125,13 +125,13 @@ class ClassicalOperators(unittest.TestCase):
         mutation = 0.5
         population_size = 97
 
-        individual_factory = vrp.VRPIndividualFactory(nodes, capacity, distances, demand, crossover_method='one_point', mutation_method='permutation')
+        individual_factory = cvrp.CVRPIndividualFactory(nodes, capacity, distances, demand)
         termination_criteria = ga.NumberOfGenerationsTerminationCriteria(number_of_generations=1000)
         solver = ga.GeneticAlgorithm(individual_factory, population_size=population_size, reproduction=reproduction, crossover=crossover, mutation=mutation, elitism=True, termination_criteria=termination_criteria)
         solver.init_population()
         solver.evolve()
         info = solver.get_generation_info()
-        fname = './results/zero_crossover/P-n16-k8.vrp.csv'
+        fname = './results/classical_operators/P-n16-k8.vrp.csv'
         info.to_csv(fname, sep=',', index=False)
 
         plt.plot(info['generation'], info['min'], "r", label="melhor", linewidth=2)
@@ -143,7 +143,7 @@ class ClassicalOperators(unittest.TestCase):
         plt.ylabel("fitness")
         plt.show()
 
-        sys.stdout.write("Finished. Results are at: ./results/zero_crossover/P-n16-k8.vrp.csv\n")
+        sys.stdout.write("Finished. Results are at: ./results/classical_operators/P-n16-k8.vrp.csv\n")
         assert True
 
     def load_test(self, fname):

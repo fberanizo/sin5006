@@ -6,14 +6,15 @@ sys.path.insert(0, os.path.abspath('..'))
 import ga, cvrp, numpy, struct, math
 
 class CVRPIndividualFactory(ga.IndividualFactory):
-    def __init__(self, nodes, capacity, distances, demand):
+    def __init__(self, nodes, capacity, distances, demand, individual_type='classical'):
         super(cvrp.CVRPIndividualFactory, self).__init__()
         self.nodes = nodes
         self.capacity = capacity
         self.distances = distances
         self.demand = demand
+        self.individual_type = individual_type
 
-    def create(self, individual_type='classical'):
+    def create(self):
         """Creates individuals of this type: [customer1,..,X,customer3,customer4,...,X,...]."""
         genotype = []
 
@@ -31,9 +32,9 @@ class CVRPIndividualFactory(ga.IndividualFactory):
 
         fitness_evaluator = cvrp.CVRPFitnessEvaluator(self.nodes, self.capacity, self.distances, self.demand)
         
-        if individual_type == 'classical':
+        if self.individual_type == 'classical':
             return cvrp.ClassicalIndividual(genotype, fitness_evaluator)
-        elif individual_type == 'simple_random':
-            return cvrp.SimpleRandomIndividual(genotype, fitness_evaluator, distances)
+        elif self.individual_type == 'simple_random':
+            return cvrp.SimpleRandomIndividual(genotype, fitness_evaluator, self.distances)
 
 ga.IndividualFactory.register(CVRPIndividualFactory)

@@ -71,7 +71,7 @@ class GeneticAlgorithm(object):
         # while the termination criteria is not satisfied, makes another generation
         while not self.termination_criteria.satisfied(self.generation, time.time()-start_time, self.population):
             self.generation += 1
-            #print str(self.generation)
+            print str(self.generation)
             next_generation = []
 
             if self.elitism:
