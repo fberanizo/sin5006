@@ -96,7 +96,8 @@ class GeneticAlgorithm(object):
                     individual2.get_fitness() # enforce fitness calculation
                     individual1, individual2 = individual.crossover(individual2)
                     next_generation.append(individual1)
-                    next_generation.append(individual2)
+                    if individual2 is not None:
+                        next_generation.append(individual2)
                 elif operation == 'mutation':
                     individual1 = individual.mutate()
                     next_generation.append(individual1)

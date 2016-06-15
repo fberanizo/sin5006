@@ -5,7 +5,7 @@ sys.path.insert(0, os.path.abspath('../..'))
 
 import unittest, ga, vrp, re, math, numpy, matplotlib.pyplot as plt
 
-class ZeroCrossover(unittest.TestCase):
+class ClassicalOperators(unittest.TestCase):
     """Test cases for CVRP problem."""
 
     def test_1(self):

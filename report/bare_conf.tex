@@ -154,6 +154,7 @@ Para contornar este problema uma primeira abordagem tomada foi repetir a realiza
 A primeira solução adotada foi não realizar crossover. Foram analizadas diferentes combinações de população e porcentagens de reprodução e de mutação. Esta abordagem foi capaz de gerar soluções factíveis, porém a qualidade foi muito aleatória em cada execução.
 
 \section{Simple Random Mutation}
+O operador inicia selecionando aleatoriamente um cliente.
 The operator starts by randomly selecting a route jMut in the offspring and then a customer within the route is chosen randomly. The customer is deleted from the offspring to avoid duplication later on. It can either be inserted into the same route again or into another randomly chosen route within the same solution, controlled by the parameter pSame. The probability of being inserted into the same route again is equal to pSame. When the customer is inserted into the same route again, it is possible that it will be inserted in the same place as before and resulting in the same offspring again. The function BestInsertion returns the index indicating the best place for the customer to be inserted. It measures the pay off in the same way as in SRC, see section 4.2.1, but the insertion route has already been selected. The pay off of inserting customer k between customers cm and cm+1 is: $pm = cost(cm; cm+1)$
 
 \begin{verbatim}

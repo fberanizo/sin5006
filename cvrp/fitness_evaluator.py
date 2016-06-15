@@ -3,11 +3,11 @@
 import sys, os
 sys.path.insert(0, os.path.abspath('..'))
 
-import ga, vrp, numpy
+import ga, cvrp, numpy
 
-class VRPFitnessEvaluator(ga.FitnessEvaluator):
+class CVRPFitnessEvaluator(ga.FitnessEvaluator):
     def __init__(self, nodes, capacity, distances, demand):
-        super(vrp.VRPFitnessEvaluator, self).__init__()
+        super(cvrp.CVRPFitnessEvaluator, self).__init__()
         self.nodes = nodes
         self.capacity = capacity
         self.distances = distances
@@ -43,4 +43,4 @@ class VRPFitnessEvaluator(ga.FitnessEvaluator):
         return fitness
 
 
-ga.FitnessEvaluator.register(VRPFitnessEvaluator)
+ga.FitnessEvaluator.register(CVRPFitnessEvaluator)
