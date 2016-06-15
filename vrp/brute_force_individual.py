@@ -5,7 +5,7 @@ sys.path.insert(0, os.path.abspath('..'))
 
 import ga, vrp, numpy, struct, math
 
-class Individual(ga.Individual):
+class BruteForceIndividual(ga.Individual):
     """Represents a solution of a vehicle routing problem."""
     def __init__(self, genotype, fitness_evaluator, crossover_method='one_point', mutation_method='permutation'):
         super(vrp.Individual, self).__init__(genotype, fitness_evaluator)

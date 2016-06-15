@@ -153,7 +153,50 @@ Para contornar este problema uma primeira abordagem tomada foi repetir a realiza
 
 A primeira solução adotada foi não realizar crossover. Foram analizadas diferentes combinações de população e porcentagens de reprodução e de mutação. Esta abordagem foi capaz de gerar soluções factíveis, porém a qualidade foi muito aleatória em cada execução.
 
+\section{Simple Random Mutation}
+The operator starts by randomly selecting a route jMut in the offspring and then a customer within the route is chosen randomly. The customer is deleted from the offspring to avoid duplication later on. It can either be inserted into the same route again or into another randomly chosen route within the same solution, controlled by the parameter pSame. The probability of being inserted into the same route again is equal to pSame. When the customer is inserted into the same route again, it is possible that it will be inserted in the same place as before and resulting in the same offspring again. The function BestInsertion returns the index indicating the best place for the customer to be inserted. It measures the pay off in the same way as in SRC, see section 4.2.1, but the insertion route has already been selected. The pay off of inserting customer k between customers cm and cm+1 is: $pm = cost(cm; cm+1)$
+
+\begin{verbatim}
+Mutation(offspring, pSame)
+NR <- number of routes in offspring
+jMut <- random(0,NR)
+RL <- number of customers in route jMut
+kMut <- random(0,RL)
+custo <- offspring[jMut][kMut]
+
+delete cust from jMut
+prob <- random(1,100)
+if prob < pSame
+  bestInd <- [jMut,BestInsertion(cust,jMut)]
+else do j <- random(0,NR)
+      while j = jMut
+        bestInd <- [j, BestInsertion(cust,j)]
+insertCust(cust, bestInd)
+return offspring
+\end{verbatim}
+
 \section{Função Fitness}
+
+\section{Operador de Reparação}
+Repairing Operator (RO) was designed to carefully shorten the routes, starting with the routes violating the capacity constraint at most. It selects the route with the largest total demand and if it does not attain the capacity constraint, a customer is randomly chosen and moved to the route with the smallest total demand.
+
+\begin{verbatim}
+Repair(offspring)
+jMax <- the index of the route in the offspring with largest total demand
+maxDem <- the total demand of route jMax 
+jMin <- the index of the route in the offspring with smallest total demand
+if maxDem > K
+  randomly choose a customer from route jMax
+  delete the customer from route jMin
+  insert the customer at the end of route jMin
+return offspring
+\end{verbatim}
+
+\section{Tuning de Parâmetros}
+1. The Population size(M).
+2. The rate of SRM.
+3. The rate of RO.
+4. The rate of GM.
 
 % For peer review papers, you can put extra information on the cover
 % page as needed:

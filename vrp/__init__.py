@@ -1,3 +1,3 @@
-from individual import Individual
+from brute_force_individual import BruteForceIndividual
 from individual_factory import VRPIndividualFactory
 from fitness_evaluator import VRPFitnessEvaluator
