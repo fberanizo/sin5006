@@ -71,7 +71,7 @@ class GeneticAlgorithm(object):
         # while the termination criteria is not satisfied, makes another generation
         while not self.termination_criteria.satisfied(self.generation, time.time()-start_time, self.population):
             self.generation += 1
-            print str(self.generation)
+            #print str(self.generation)
             next_generation = []
 
             if self.elitism:
@@ -96,8 +96,7 @@ class GeneticAlgorithm(object):
                     individual2.get_fitness() # enforce fitness calculation
                     individual1, individual2 = individual.crossover(individual2)
                     next_generation.append(individual1)
-                    if individual2 is not None:
-                        next_generation.append(individual2)
+                    next_generation.append(individual2)
                 elif operation == 'mutation':
                     individual1 = individual.mutate()
                     next_generation.append(individual1)

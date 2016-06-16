@@ -12,13 +12,16 @@
 \graphicspath{ {images/} }
 \newcommand\myworries[1]{\textcolor{red}{#1}}
 
+\usepackage{abstract}
+\renewcommand{\abstractname}{}    % clear the title
+
 % correct bad hyphenation here
 \hyphenation{op-tical net-works semi-conduc-tor}
 
 
 \begin{document}
 
-\title{Trabalho de Algorítmos Genéticos\\ Parte 2}
+\title{Trabalho de Algoritmos Genéticos\\ Parte 2}
 
 
 \author{\IEEEauthorblockN{Fábio Beranizo Fontes Lopes}
@@ -33,10 +36,10 @@ Email: f.lopes@usp.br}
 % As a general rule, do not put math, special symbols or citations
 % in the abstract
 \begin{abstract}
-Este relatório apresenta a discussão da parte 2  do trabalho de algorítmos
+Este relatório apresenta a discussão da parte 2  do trabalho de algoritmos
 genéticos (GA) para a disciplina de Inteligência Computacional. Foi avaliada a
 utilização de GA para roteamento de veículos. O foco se manteve em
-analisar o comportamento do algorítmo mediante a utilização de
+analisar o comportamento do algoritmo mediante a utilização de
 diferentes técnicas, operadores e parametrizações.\\
 O trabalho foi desenvolvido utilizando a linguagem de programação Python,
 especificamente sua distribuição Anaconda.\\
@@ -92,70 +95,65 @@ O custo de uma dada rota ($R_i = \{v_0,v_1,...,v_{m+1}\}$), onde $v_i \in V$ e $
 A demanda total de todos os clientes servidos em uma rota $R_{i}$ não excede a capacidade do veículo $Q$: $\sum_{i=1}^{m} d_{i} \leq Q$.
 
 \section{Algoritmo Genético}
+Algoritmos Genéticos (GA) são heurísticas inspiradas na seleção natural biológica. GA gera soluções aproximadas para um dado problema, buscando melhorar os resultados a cada geração. Utilizando soluções antigas (pais) e certos operadores, são criadas novas soluções (filhos).
 
-\section{Seleção de Indivíduos}
-Somente um operador de seleção de indivíduos foi analisado neste trabalho, o
-método da roleta. Ele operador foi escolhido por ser de fácil implementação e
-por apresentar bons resultados segundo a literatura. No entanto, durante o
-desenvolvimento foi possível perceber um problema: este operador aumenta
-consideravelmente o tempo de execução do algorítmo para grandes populações, uma 
-vez que todos os indivíduos participam do sorteio.
+\subsection{Operadores Genéticos}
+Indivíduos selecionados de uma população passam por um dos 3 tipos de operadores genéticos: reprodução, crossover e mutação. Neste trabalho foram analisados tipos de crossover e de mutação clássicos, além de outros orientados ao VRP.\\
 
-\subsection{Método da Roleta}
-O método da roleta leva em consideração o fitness de um indivíduo em relação ao
-fitness total da população. Nesse processo cada indivíduo possui uma 
-probabilidade de ser selecionado (uma fatia da roleta) proporcional ao seu
-fitness. Embora não garanta que as melhores soluções sobrevivam, este método
-dá maiores probabilidades de sobrevida às soluções com bom fitness.
+\subsubsection{Seleção de Indivíduos}
+Somente um operador de seleção de indivíduos foi analisado neste trabalho, o método da roleta. Ele operador foi escolhido por ser de fácil implementação e por apresentar bons resultados segundo a literatura. No entanto, durante o desenvolvimento foi possível perceber um problema: este operador aumenta consideravelmente o tempo de execução do algoritmo para grandes populações, uma vez que todos os indivíduos participam do sorteio.\\
+O método da roleta leva em consideração o fitness de um indivíduo em relação ao fitness total da população. Nesse processo cada indivíduo possui uma probabilidade de ser selecionado (uma fatia da roleta) proporcional ao seu fitness. Embora não garanta que as melhores soluções sobrevivam, este método dá maiores probabilidades de sobrevida às soluções com bom fitness.
 
-\section{Operadores Genéticos}
-Os indivíduos selecionados passam por um dos 3 tipos de operadores
-genéticos: reprodução, crossover e mutação. Neste trabalho foram analisados
-dois tipos de crossover e dois tipos de mutação, que são descritos abaixo:\\
+\subsubsection{Reprodução}
+O operador de reprodução consiste em manter vivos alguns indivíduos baseados em seu fitness. Quanto melhor o fitness, maior a chance de sobrevivência.
 
-\subsection{Crossover}
-O operador crossover permite a criação de novos indivíduos a partir de
-organismos pais. Os descendentes possuem genótipo de ambos pais, embora
-geralmente sejam diferentes. O crossover é uma forma de ampliar o espaço de
-busca por soluções, porém mantendo-se material genético de boa qualidade de
-gerações anteriores.
+\subsubsection{Crossover}
+O operador crossover permite a criação de novos indivíduos a partir de organismos pais. Os descendentes possuem genótipo de ambos pais, embora geralmente sejam diferentes. O crossover é uma forma de ampliar o espaço de busca por soluções, porém mantendo-se material genético de boa qualidade de gerações anteriores.
 
+\subsubsection{Mutação}
+O operador de mutação permite inserir diversidade genética entre gerações de indivíduos trocando o valor de genes no cromossomo. Com maior variedade genética o espaço de busca é ampliado, possibilitando sair de situações de mínimo local.
 
-\section{Instâncias de Teste}
-As instâncias de teste utilizadas foram obtidas a partir do site http://www.bernabe.dorronsoro.es/vrp/. Os grupos 
-
-%augeral et. al, etc...
-
-
-\section{Operadores Clássicos}
 
 % Aplicando operadores clássicos: esses são os operadores da parte I do trabalho. Esses operadores vão gerar muitas soluções infactíveis. Vocês devem analisar essa infactibilidade, mostrando como ela ocorre e por que. Discutam suas observações.
 % b) aplicando operadores de correção: esses operadores são novos operadores, que vocês devem criar (há pelo menos um na bibliografia disponibilizada), para corrigir a infactibilidade criada na letra 
 
 % TODO explicar operadores da primeira parte (crossover de um ponto, uniforme)
 
-\subsection{Geração de Instâncias}
-Para a geração de uma população inicial válida, foi tomada a seguinte abordagem:
-\begin{enumerate}
-\item Criar uma ordenação aleatória dos clientes
-\item Iniciando do primeiro cliente ordenado, alocar demanda de cada cliente a um veículo
-\item Se uma demanda exceder a capacidade restante do veículo, alocar outro veículo
-\end{enumerate}
+\subsection{Cromossomo}
+O modelo de genótipo escolhido foi uma vetor que guarda a sequencia de clientes servidas por um veículo, e separada por um caracter ``X'' que representa o início de um outro veículo.
 
-O modelo de genótipo escolhido foi uma lista que guarda a sequencia de clientes servidas por um veículo, e separada por um caracter ``X'' que representa o início do caminho de um outro veículo.
+A escolha deste modelo de cromossomo foi devida a facilidade de manipulação do mesmo. Dessa forma, foi simples de executar os operadores de crossover e mutação bem como no cálculo de fitness.
+
+No entanto, esse modelo de cromossomo facilitou a geração de solução infactíveis, como será explicado na próxima seção.
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=2.5in]{error_in_crossover}
+% where an .eps filename suffix will be assumed under latex, 
+% and a .pdf suffix will be assumed for pdflatex; or what has been declared
+% via \DeclareGraphicsExtensions.
+\caption{Crossover que gera solução infactível.}
+\label{fig_sim}
+\end{figure}
 
 \subsection{Problemas com operadores}
-Durante o desenvolvimento da solução, foi detectado que a aplicação dos operadores de mutação e de crossover poderia criar soluções infactíveis para o problema. Para um cromossomo cujos genes representam um caminho, a aplicação de crossover leva fatalmente à geração de caminhos incompletos.\\
+Durante o desenvolvimento da solução, foi detectado que a aplicação dos operadores de mutação e de crossover poderia criar soluções infactíveis para o problema. Para um cromossomo cujos genes representam um caminho, a aplicação de crossover leva fatalmente à geração de caminhos incompletos. A figura 1 mostra um exemplo de crossover que gera solução infactível. \\
 
-Para contornar este problema uma primeira abordagem tomada foi repetir a realização do crossover por quantas vezes quanto necessário até que seja gerado um crossover válido. No entanto após a realização de testes esta possibilidade foi descartada, uma vez que demorava muito até que surgisse uma solução válida. Além disso, muito recurso computacional era disperdiçado, fazendo com que essa solução fosse inviável. Assim, foi necessário buscar alternativas na literatura para resolver o problema.
+Para contornar este problema uma primeira abordagem tomada foi repetir a realização do crossover por quantas vezes quanto necessário até que seja gerado um crossover válido. No entanto, após a realização de testes esta possibilidade foi descartada, uma vez que demorava muito até que surgisse uma solução válida. Além disso, muito recurso computacional era disperdiçado, fazendo com que essa solução fosse inviável. Assim, foi necessário buscar alternativas na literatura para resolver o problema.
 
 % We also have to permutate the parents to find the fittings ones, and it is not sure, that we will find them. This is also rather time consuming and resource consuming
 
-A primeira solução adotada foi não realizar crossover. Foram analizadas diferentes combinações de população e porcentagens de reprodução e de mutação. Esta abordagem foi capaz de gerar soluções factíveis, porém a qualidade foi muito aleatória em cada execução.
 
-\section{Simple Random Mutation}
-O operador inicia selecionando aleatoriamente um cliente.
-The operator starts by randomly selecting a route jMut in the offspring and then a customer within the route is chosen randomly. The customer is deleted from the offspring to avoid duplication later on. It can either be inserted into the same route again or into another randomly chosen route within the same solution, controlled by the parameter pSame. The probability of being inserted into the same route again is equal to pSame. When the customer is inserted into the same route again, it is possible that it will be inserted in the same place as before and resulting in the same offspring again. The function BestInsertion returns the index indicating the best place for the customer to be inserted. It measures the pay off in the same way as in SRC, see section 4.2.1, but the insertion route has already been selected. The pay off of inserting customer k between customers cm and cm+1 is: $pm = cost(cm; cm+1)$
+%A primeira solução adotada foi não realizar crossover. Foram analizadas diferentes combinações de população e porcentagens de reprodução e de mutação. Esta abordagem foi capaz de gerar soluções factíveis, porém a qualidade foi muito aleatória em cada execução.
+
+\subsection{Simple Random Mutation}
+A primeira solução escolhida observando-se a literatura foi o Simple Random Mutation (SRM).\\
+O operador inicia selecionando aleatoriamente um cliente. O cliente é então removido de sua rota para evitar ficar duplicado na solução. A seguir é executada a função \textit{BestInsertion} que retorna o índice que indica o melhor lugar para inserir o cliente removido. O cliente é então inserido na posição retornada por best-insertion. \\
+
+BestInsertion estima o custo para inserir uma subrota k1..kn entre dois clientes m e m+1 como: \[c = dist(m; m+1) - dist(m,k1) - dist(kn, m+1)\]
+Os cliente m e m+1 que maximizam c são então escolhido para inserção da subrota.\\
+
+\textbf{Essa técnica não verifica se a solução continua factível}, pois não verifica se a nova rota excede as capacidades do veículo.
 
 \begin{verbatim}
 Mutation(offspring, pSame)
@@ -176,8 +174,8 @@ insertCust(cust, bestInd)
 return offspring
 \end{verbatim}
 
-\section{Simple Random Crossover}
-The Simple Random Crossover (SRC) is the most simple one of the four crossover operators and it mostly depends on random decisions. In words, the operator randomly selects a subroute from P2 and inserts it into P1. The pseudo code is the following:
+\subsection{Simple Random Crossover}
+A técnica de Simple Random Crossover (SRC) é análoga a SRM. Dados 2 cromossomos P1 e P2, é feita a seleção de uma subrota de P2. Em seguida, os elementos da subrota são removidos de P1. A função BestInsertion é executada então em P1 e, na posição retornada é feita a inserção da subrota.
 
 \begin{verbatim}
 SRCrossover(P1,P2)
@@ -190,10 +188,15 @@ return offspring
 \end{verbatim}
 
 \section{Função Fitness}
+Para avaliar a seleção natural, cada indivíduo é avaliado em termos de seu valor de fitness. Essa medida, mede a qualidade das soluções e permite sua comparação.
+
+Na parte 1 do trabalho o tipo do problema não exigiu muito trabalho de acerto da função de fitness. No entanto, nessa parte foi necessário contornar várias dificuldades, por exemplo: avaliar soluções infactíveis.\\
+A forma adotada neste trabalho para lidar com soluções infactíveis foi somar um valor de penalidade ao fitness da solução.\\
+\textbf{Se a demanda de um veículo exceder sua capacidade, será aplicada penalidade igual à duas vezes a distância das rotas.}
+
 
 \section{Operador de Reparação}
-Repairing Operator (RO) was designed to carefully shorten the routes, starting with the routes violating the capacity constraint at most. It selects the route with the largest total demand and if it does not attain the capacity constraint, a customer is randomly chosen and moved to the route with the smallest total demand.
-
+O operador de reparação (RO) é utilizado para diminuir as rotas existentes. Um cliente é selecionado da rota que mais viola a restrição de capacidade. Em seguida o mesmo é transferido para o final da rota com menor soma de demanda.
 \begin{verbatim}
 Repair(offspring)
 jMax <- the index of the route in the offspring with largest total demand
@@ -206,11 +209,83 @@ if maxDem > K
 return offspring
 \end{verbatim}
 
+
+\section{Instâncias de Teste}
+As instâncias de teste utilizadas foram obtidas a partir do site http://www.bernabe.dorronsoro.es/vrp/. Neste site estão presentes variadas instâncias para o problema do CVRP, bem como seus valores ótimos/melhores conhecidos.\\
+Para a realização dos testes foram selecionadas uma instância de dimensão pequena cada grupo A, B e P de Augerat et al.. Além disso, foi utilizada uma instância de dimensão alta do grupo A.\\
+A Tabela \ref{table_optimum} mostra os valores ótimos para as instâncias de teste avaliadas.
+
+\begin{table}[!t]
+\renewcommand{\arraystretch}{1.3}
+\caption{Valores ótimos para as instâncias avaliadas}
+\label{table_optimum}
+\centering
+\begin{tabular}{|c||c|}
+\hline
+Instância de Teste & Valor ótimo\\
+\hline
+A-n32-k5 & 784\\
+B-n31-k5 & 672\\
+P-n16-k8 & 435\\
+A-n80-k10 & 1763\\
+\hline
+\end{tabular}
+\end{table}
+
+
+\section{Inicialização de População}
+Para a geração de uma população inicial válida, foi tomada a seguinte abordagem:
+\begin{enumerate}
+\item Gerar uma ordenação aleatória dos clientes
+\item Iniciando-se do primeiro cliente ordenado, alocar demanda de cada cliente a um veículo
+\item Se uma demanda exceder a capacidade restante do veículo, alocar outro veículo
+\end{enumerate}
+
+\textbf{Essa abordagem sempre cria soluções factíveis, embora não garanta bons valores de fitness.}
+
+
 \section{Tuning de Parâmetros}
-1. The Population size(M).
-2. The rate of SRM.
-3. The rate of RO.
-4. The rate of GM.
+Existem alguns parâmetros que são utilizados no processo de resolução do VRP através algoritmos genéticos. Para obter bons resultados é necessário ajustá-los. Idealmente, cada parâmetro deveriam ser testados exaustivamente, num universo contínuo de valores. No entanto, este processo consome demasiado tempo, sendo necessário restringir o universo de busca.\\
+No desenvolvimento deste trabalho, a abordagem tomada neste processo foi a execução de um \textit{Grid Search} de parâmetros. Os seguintes parâmetros foram buscados:
+\begin{itemize}
+\item Tamanho da População
+\item Taxa de Reprodução
+\item Taxa de Crossover
+\item Taxa de Mutação
+\end{itemize}
+
+\ref{table:table_tuning_parameters} mostra as combinações de parâmetros testadas durante o grid search. Os valores de população foram escolhidos em escala logarítmica para que tivessem grandezas bem diferentes, e assim apresentassem diferença significativa de resultados. As taxas, por sua vez foram testadas em combinações que não permitiam probabilidade zero, para que todos operadores fossem testados. Ao mesmo tempo, foi possível testar taxas bem distintas (ex: 0.75, 0.125, 0.125) permitindo observar o comportamento com operadores dominantes.
+
+\begin{table}[!t]
+\renewcommand{\arraystretch}{1.3}
+\centering
+\caption{Variação dos Parâmetros no Grid Search}
+\label{table_tuning_parameters}
+\begin{tabular}{|c||c|}
+\hline
+Parâmetro & Valores\\
+\hline
+Tamanho da População & 8, 27, 97, 337, 1176, 4096\\
+\hline
+Taxas de Reprodução, \\Crossover e Mutação & Combinações de 0.125, 0.25, \\ & 0.375, 0.5, 0.625, 0.75\\
+\hline
+\end{tabular}
+\end{table}
+
+
+\subsection{Resultados do Tuning}
+%% TODO
+
+
+\section{Discussão}
+Analisando as técnicas avaliadas nas seções anteriores, é possível avaliar que nenhuma delas levou a excelentes resultados. Nenhuma das técnicas conseguiu alcançar os valores ótimos das instâncias, mesmo daquelas de dimensão pequena.
+Aquela que obteve melhores resultados foi a Simple Random Mutation/Crossover com correção. Tal técnica é a mais elaborada dentre as que foram desenvolvidas, no entanto ainda é uma heurística simples, dependente da aleatoriedade. 
+
+Uma possível explicação para o desempenho ruim de SRC/SRM é é que são geradas muitas soluções infactíveis. Em um cenário que indivíduos pais são boas soluções, muito provavelmente cada veículo da rota está cheio. A aplicação de \textit{BestInsertion} muito provavelmente levará à solução infactível. 
+
+Quanto aos operadores clássicos de crossover e mutação, eles claramente não são puramente aplicáveis ao problema. É difícil criar novos indivíduos válidos a partir do crossover de um ponto, fazendo do operador de mutação (permutação) a unica opção aplicável. No entanto, observou-se que isso causa muita aleatoriedade nas soluções e contribui para que ela não converja facilmente para o ótimo.
+
+A aplicação do operador de correção...
 
 % For peer review papers, you can put extra information on the cover
 % page as needed:

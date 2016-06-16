@@ -36,5 +36,7 @@ class CVRPIndividualFactory(ga.IndividualFactory):
             return cvrp.ClassicalIndividual(genotype, fitness_evaluator)
         elif self.individual_type == 'simple_random':
             return cvrp.SimpleRandomIndividual(genotype, fitness_evaluator, self.distances)
+        elif self.individual_type == 'corrected':
+            return cvrp.CorrectedIndividual(genotype, fitness_evaluator, self.capacity, self.distances, self.demand)
 
 ga.IndividualFactory.register(CVRPIndividualFactory)

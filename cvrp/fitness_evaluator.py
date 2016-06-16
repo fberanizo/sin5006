@@ -19,6 +19,7 @@ class CVRPFitnessEvaluator(ga.FitnessEvaluator):
         capacity = self.capacity
         previous = 1 # vehicle starts at depot
         i = 0
+        feasible = True
         #print individual.get_genotype()
         while i < len(individual.get_genotype()):
             current = individual.get_genotype()[i]
@@ -35,10 +36,13 @@ class CVRPFitnessEvaluator(ga.FitnessEvaluator):
                 capacity -= self.demand[current]
                 # if demand is greater than vehicle capacity, fitness is made too big
                 if capacity < 0:
-                    fitness += 10000
+                    feasible = False
                 previous = current
             i += 1
         fitness += self.distances.item((previous-1, 0))
+
+        if not feasible:
+            fitness = 2*fitness
 
         return fitness
 

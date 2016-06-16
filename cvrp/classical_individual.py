@@ -12,12 +12,12 @@ class ClassicalIndividual(ga.Individual):
 
     def mutate(self):
         """Performs a mutation where two values in the chromosome are swaped."""
-        genotype = numpy.array(individual.genotype, copy=True)
+        genotype = numpy.array(self.genotype, copy=True)
         [idx1, idx2] = numpy.random.randint(0, len(genotype), 2)
-        aux = individual.genotype[idx1]
+        aux = self.genotype[idx1]
         numpy.put(genotype, [idx1], [genotype[idx2]])
         numpy.put(genotype, [idx2], [aux])
-        return cvrp.ClassicalIndividual(genotype, individual.fitness_evaluator)
+        return cvrp.ClassicalIndividual(genotype, self.fitness_evaluator)
 
     def crossover(self, another_individual):
         size = len(filter(lambda x: x != 'X', another_individual.get_genotype()))

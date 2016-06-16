@@ -5,11 +5,13 @@ sys.path.insert(0, os.path.abspath('..'))
 
 import ga, cvrp, numpy, struct, math, itertools, random
 
-class SimpleRandomIndividual(ga.Individual):
+class CorrectedIndividual(ga.Individual):
     """Represents a solution of a vehicle routing problem."""
-    def __init__(self, genotype, fitness_evaluator, distances):
-        super(cvrp.SimpleRandomIndividual, self).__init__(genotype, fitness_evaluator)
+    def __init__(self, genotype, fitness_evaluator, capacity, distances, demand):
+        super(cvrp.CorrectedIndividual, self).__init__(genotype, fitness_evaluator)
+        self.capacity = capacity
         self.distances = distances
+        self.demand = demand
 
     def mutate(self):
         """Simple Random Mutation:
@@ -26,7 +28,10 @@ class SimpleRandomIndividual(ga.Individual):
         c = self.best_insertion(genotype, int(k), int(k))
         genotype = numpy.insert(genotype, c, k)
 
-        return cvrp.SimpleRandomIndividual(genotype, self.fitness_evaluator, self.distances)
+        # applies correction operator
+        genotype = self.repair(genotype)
+
+        return cvrp.CorrectedIndividual(genotype, self.fitness_evaluator, self.capacity, self.distances, self.demand)
 
     def crossover(self, another_individual):
         """Simple Random Crossover:
@@ -55,7 +60,10 @@ class SimpleRandomIndividual(ga.Individual):
         c = self.best_insertion(p1, int(subroute[0]), int(subroute[-1]))
         p1 = numpy.insert(p1, c, subroute)
 
-        return cvrp.SimpleRandomIndividual(p1, self.fitness_evaluator, self.distances)
+        # applies correction operator
+        p1 = self.repair(p1)
+
+        return cvrp.CorrectedIndividual(p1, self.fitness_evaluator, self.capacity, self.distances, self.demand)
 
     def best_insertion(self, genotype, k1, kn):
         """Finds out a inserction position for customer k that minimizes replacement cost."""
@@ -69,4 +77,36 @@ class SimpleRandomIndividual(ga.Individual):
         max_idx = costs.index(max_val)
         return max_idx
 
+    def repair(self, genotype):
+        # calculates the demand of each route
+        #print genotype
+        routes = [list(y) for x, y in itertools.groupby(genotype, lambda z: z == 'X') if not x]
+        #print routes
+        demands = map(lambda r: sum(map(lambda c: self.demand[int(c)], r)), routes)
+        #print demands
 
+        # obtains routes with max and min demand
+        j_max = demands.index(max(demands))
+        #print j_max
+        j_min = demands.index(min(demands))
+        #print j_min
+
+        # if capacity is exceeded
+        if max(demands) > self.capacity:
+            # picks a customer from route jMax and inserts it at then end of route jMin
+            k = numpy.random.choice(routes[j_max])
+            routes[j_max].remove(k)
+            routes[j_min].append(k)
+        return list(itertools.chain(*list(sum([[i, 'X'] for i in routes], [])[:-1])))
+
+        # Repair(offspring)
+        # jMax <- the index of the route in the offspring with largest total demand
+        # maxDem <- the total demand of route jMax 
+        # jMin <- the index of the route in the offspring with smallest total demand
+        # if maxDem > K
+        #   randomly choose a customer from route jMax
+        #   delete the customer from route jMin
+        #   insert the customer at the end of route jMin
+        # return offspring
+
+ga.Individual.register(CorrectedIndividual)

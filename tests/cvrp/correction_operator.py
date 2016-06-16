@@ -5,7 +5,7 @@ sys.path.insert(0, os.path.abspath('../..'))
 
 import unittest, ga, cvrp, grid_search, re, math, numpy, itertools, matplotlib.pyplot as plt
 
-class ClassicalOperators(unittest.TestCase):
+class CorrectionOperator(unittest.TestCase):
     """Test cases for CVRP problem."""
     grid_search = False
 
@@ -13,46 +13,45 @@ class ClassicalOperators(unittest.TestCase):
         """
         Chromosome: sequence of clients separed by an 'X' when a new vehicle is assigned
         Selection: roulette-wheel
-        Crossover operator: one-point
-        Mutation operator: permutation
+        Crossover operator: simple random crossover
+        Mutation operator: simple random mutation
         Elitism is enabled
         Termination criteria: number of generations = 100
         Parameters:
-            population_size: 4096
-            reproduction rate: 0.2
-            crossover rate: 0
-            mutation rate: 0.8
+            population_size: 27
+            reproduction rate: 0.375
+            crossover rate: 0.375
+            mutation rate: 0.25
         """
         fname = './input/A-n32-k5.vrp'
         nodes, capacity, distances, demand = self.load_test(fname)
 
-        individual_factory = cvrp.CVRPIndividualFactory(nodes, capacity, distances, demand, 'classical')
+        individual_factory = cvrp.CVRPIndividualFactory(nodes, capacity, distances, demand, individual_type='corrected')
         termination_criteria = ga.NumberOfGenerationsTerminationCriteria(number_of_generations=100)
-        solver = ga.GeneticAlgorithm(individual_factory, population_size=4096, reproduction=0.2, crossover=0.2, mutation=0.8, elitism=True, termination_criteria=termination_criteria)
+        solver = ga.GeneticAlgorithm(individual_factory, population_size=27, reproduction= 0.375, crossover= 0.375, mutation=0.25, elitism=True, termination_criteria=termination_criteria)
 
         if self.grid_search:
             params = {
                 "population_size": numpy.logspace(3, 12, base=2, num=6, dtype=int),
-                "operators_rate": map(lambda x: (x[0], 0.0, x[1]), filter(lambda x: sum(x) == 1.0, itertools.product(numpy.arange(.125, 0.875, .125), repeat=2))),
+                "operators_rate": filter(lambda x: sum(x) == 1.0, itertools.product(numpy.arange(.125, 0.875, .125), repeat=3)),
                 "elitism": [True],
                 "termination_criteria": [ ga.NumberOfGenerationsTerminationCriteria(number_of_generations=100) ]
             }
             grid = grid_search.GridSearch(solver, params)
             grid.search(0.0)
             grid_scores = grid.get_grid_scores()
-            
-            fname = './results/classical_operators/A-n32-k5.vrp.grid.csv'
+
+            fname = './results/correction_operator/A-n32-k5.vrp.grid.csv'
             grid_scores.to_csv(fname, sep=',', index=False)
-            sys.stdout.write("Finished. Results are at: ./results/classical_operators/A-n32-k5.vrp.grid.csv\n")
+            sys.stdout.write("Finished. Results are at: ./results/correction_operator/A-n32-k5.vrp.grid.csv\n")
         else:
-            sys.stdout.write("Starting test_1: CLASSICAL OPERATORS, ELITISM ENABLED\n")
+            sys.stdout.write("Starting test_1: CORRECTION + SIMPLE RANDOM OPERATORS, ELITISM ENABLED\n")
             sys.stdout.write("Input: ./tests/cvrp/A-n32-k5.vrp\n")
-            
+
             solver.init_population()
             solver.evolve()
-
             info = solver.get_generation_info()
-            fname = './results/classical_operators/A-n32-k5.vrp.csv'
+            fname = './results/correction_operator/A-n32-k5.vrp.csv'
             info.to_csv(fname, sep=',', index=False)
 
             plt.plot(info['generation'], info['min'], "r", label="melhor", linewidth=2)
@@ -64,52 +63,52 @@ class ClassicalOperators(unittest.TestCase):
             plt.ylabel("fitness")
             plt.show()
 
-            sys.stdout.write("Finished. Results are at: ./results/classical_operators/A-n32-k5.vrp.csv\n")
+            sys.stdout.write("Finished. Results are at: ./results/correction_operator/A-n32-k5.vrp.csv\n")
         assert True
 
     def test_2(self):
         """
         Chromosome: sequence of clients separed by an 'X' when a new vehicle is assigned
         Selection: roulette-wheel
-        Crossover operator: one-point
-        Mutation operator: permutation
+        Crossover operator: simple random crossover
+        Mutation operator: simple random mutation
         Elitism is enabled
         Termination criteria: number of generations = 100
         Parameters:
-            population_size: 4096
-            reproduction rate: 0.2
-            crossover rate: 0
-            mutation rate: 0.8
+            population_size: 27
+            reproduction rate: 0.375
+            crossover rate: 0.25
+            mutation rate: 0.375
         """
         fname = './input/B-n31-k5.vrp'
         nodes, capacity, distances, demand = self.load_test(fname)
 
-        individual_factory = cvrp.CVRPIndividualFactory(nodes, capacity, distances, demand)
+        individual_factory = cvrp.CVRPIndividualFactory(nodes, capacity, distances, demand, individual_type='corrected')
         termination_criteria = ga.NumberOfGenerationsTerminationCriteria(number_of_generations=100)
-        solver = ga.GeneticAlgorithm(individual_factory, population_size=4096, reproduction=0.2, crossover=0.0, mutation=0.8, elitism=True, termination_criteria=termination_criteria)
-
+        solver = ga.GeneticAlgorithm(individual_factory, population_size=27, reproduction= 0.375, crossover=0.25, mutation= 0.375, elitism=True, termination_criteria=termination_criteria)
+        
         if self.grid_search:
             params = {
                 "population_size": numpy.logspace(3, 12, base=2, num=6, dtype=int),
-                "operators_rate": map(lambda x: (x[0], 0.0, x[1]), filter(lambda x: sum(x) == 1.0, itertools.product(numpy.arange(.125, 0.875, .125), repeat=2))),
+                "operators_rate": filter(lambda x: sum(x) == 1.0, itertools.product(numpy.arange(.125, 0.875, .125), repeat=3)),
                 "elitism": [True],
                 "termination_criteria": [ ga.NumberOfGenerationsTerminationCriteria(number_of_generations=100) ]
             }
             grid = grid_search.GridSearch(solver, params)
             grid.search(0.0)
             grid_scores = grid.get_grid_scores()
-            
-            fname = './results/classical_operators/B-n31-k5.vrp.grid.csv'
+
+            fname = './results/correction_operator/B-n31-k5.vrp.grid.csv'
             grid_scores.to_csv(fname, sep=',', index=False)
-            sys.stdout.write("Finished. Results are at: ./results/classical_operators/B-n31-k5.vrp.grid.csv\n")
+            sys.stdout.write("Finished. Results are at: ./results/correction_operator/B-n31-k5.vrp.grid.csv\n")
         else:
-            sys.stdout.write("Starting test_2: CLASSICAL OPERATORS, ELITISM ENABLED\n")
+            sys.stdout.write("Starting test_2: CORRECTION + SIMPLE RANDOM OPERATORS, ELITISM ENABLED\n")
             sys.stdout.write("Input: ./tests/vrp/B-n31-k5.vrp\n")
 
             solver.init_population()
             solver.evolve()
             info = solver.get_generation_info()
-            fname = './results/classical_operators/B-n31-k5.vrp.csv'
+            fname = './results/correction_operator/B-n31-k5.vrp.csv'
             info.to_csv(fname, sep=',', index=False)
 
             plt.plot(info['generation'], info['min'], "r", label="melhor", linewidth=2)
@@ -121,52 +120,52 @@ class ClassicalOperators(unittest.TestCase):
             plt.ylabel("fitness")
             plt.show()
 
-            sys.stdout.write("Finished. Results are at: ./results/classical_operators/B-n31-k5.vrp.csv\n")
+            sys.stdout.write("Finished. Results are at: ./results/correction_operator/B-n31-k5.vrp.csv\n")
         assert True
 
     def test_3(self):
         """
         Chromosome: sequence of clients separed by an 'X' when a new vehicle is assigned
         Selection: roulette-wheel
-        Crossover operator: one-point
-        Mutation operator: permutation
+        Crossover operator: simple random crossover
+        Mutation operator: simple random mutation
         Elitism is enabled
         Termination criteria: number of generations = 100
         Parameters:
-            population_size: 4096
-            reproduction rate: 0.2
-            crossover rate: 0
-            mutation rate: 0.8
+            population_size: 27
+            reproduction rate: 0.25
+            crossover rate: 0.625
+            mutation rate: 0.125
         """
         fname = './input/P-n16-k8.vrp'
         nodes, capacity, distances, demand = self.load_test(fname)
 
-        individual_factory = cvrp.CVRPIndividualFactory(nodes, capacity, distances, demand)
+        individual_factory = cvrp.CVRPIndividualFactory(nodes, capacity, distances, demand, individual_type='corrected')
         termination_criteria = ga.NumberOfGenerationsTerminationCriteria(number_of_generations=100)
-        solver = ga.GeneticAlgorithm(individual_factory, population_size=4096, reproduction=0.2, crossover=0.0, mutation=0.8, elitism=True, termination_criteria=termination_criteria)
-
+        solver = ga.GeneticAlgorithm(individual_factory, population_size=27, reproduction=0.25, crossover=0.625, mutation=0.125, elitism=True, termination_criteria=termination_criteria)
+        
         if self.grid_search:
             params = {
                 "population_size": numpy.logspace(3, 12, base=2, num=6, dtype=int),
-                "operators_rate": map(lambda x: (x[0], 0.0, x[1]), filter(lambda x: sum(x) == 1.0, itertools.product(numpy.arange(.125, 0.875, .125), repeat=2))),
+                "operators_rate": filter(lambda x: sum(x) == 1.0, itertools.product(numpy.arange(.125, 0.875, .125), repeat=3)),
                 "elitism": [True],
                 "termination_criteria": [ ga.NumberOfGenerationsTerminationCriteria(number_of_generations=100) ]
             }
             grid = grid_search.GridSearch(solver, params)
             grid.search(0.0)
             grid_scores = grid.get_grid_scores()
-            
-            fname = './results/classical_operators/P-n16-k8.vrp.grid.csv'
-            grid_scores.to_csv(fname, sep=',', index=False)
-            sys.stdout.write("Finished. Results are at: ./results/classical_operators/P-n16-k8.vrp.grid.csv\n")
-        else:
-            sys.stdout.write("Starting test_3: CLASSICAL OPERATORS, ELITISM ENABLED\n")
-            sys.stdout.write("Input: ./tests/vrp/P-n16-k8.vrp\n")
 
+            fname = './results/correction_operator/P-n16-k8.vrp.grid.csv'
+            grid_scores.to_csv(fname, sep=',', index=False)
+            sys.stdout.write("Finished. Results are at: ./results/correction_operator/P-n16-k8.vrp.grid.csv\n")
+        else:
+            sys.stdout.write("Starting test_3: CORRECTION + SIMPLE RANDOM OPERATORS, ELITISM ENABLED\n")
+            sys.stdout.write("Input: ./tests/vrp/P-n16-k8.vrp\n")
+        
             solver.init_population()
             solver.evolve()
             info = solver.get_generation_info()
-            fname = './results/classical_operators/P-n16-k8.vrp.csv'
+            fname = './results/correction_operator/P-n16-k8.vrp.csv'
             info.to_csv(fname, sep=',', index=False)
 
             plt.plot(info['generation'], info['min'], "r", label="melhor", linewidth=2)
@@ -178,52 +177,52 @@ class ClassicalOperators(unittest.TestCase):
             plt.ylabel("fitness")
             plt.show()
 
-            sys.stdout.write("Finished. Results are at: ./results/classical_operators/P-n16-k8.vrp.csv\n")
+            sys.stdout.write("Finished. Results are at: ./results/correction_operator/P-n16-k8.vrp.csv\n")
         assert True
 
     def test_4(self):
         """
         Chromosome: sequence of clients separed by an 'X' when a new vehicle is assigned
         Selection: roulette-wheel
-        Crossover operator: one-point
-        Mutation operator: permutation
+        Crossover operator: simple random crossover
+        Mutation operator: simple random mutation
         Elitism is enabled
         Termination criteria: number of generations = 100
         Parameters:
-            population_size: 4096
-            reproduction rate: 0.2
-            crossover rate: 0
-            mutation rate: 0.8
+            population_size: 27
+            reproduction rate: 0.25
+            crossover rate: 0.625
+            mutation rate: 0.125
         """
         fname = './input/A-n80-k10.vrp'
         nodes, capacity, distances, demand = self.load_test(fname)
 
-        individual_factory = cvrp.CVRPIndividualFactory(nodes, capacity, distances, demand)
+        individual_factory = cvrp.CVRPIndividualFactory(nodes, capacity, distances, demand, individual_type='corrected')
         termination_criteria = ga.NumberOfGenerationsTerminationCriteria(number_of_generations=100)
-        solver = ga.GeneticAlgorithm(individual_factory, population_size=4096, reproduction=0.2, crossover=0.0, mutation=0.8, elitism=True, termination_criteria=termination_criteria)
-
+        solver = ga.GeneticAlgorithm(individual_factory, population_size=27, reproduction=0.25, crossover=0.625, mutation=0.125, elitism=True, termination_criteria=termination_criteria)
+        
         if self.grid_search:
             params = {
                 "population_size": numpy.logspace(3, 12, base=2, num=6, dtype=int),
-                "operators_rate": map(lambda x: (x[0], 0.0, x[1]), filter(lambda x: sum(x) == 1.0, itertools.product(numpy.arange(.125, 0.875, .125), repeat=2))),
+                "operators_rate": filter(lambda x: sum(x) == 1.0, itertools.product(numpy.arange(.125, 0.875, .125), repeat=3)),
                 "elitism": [True],
                 "termination_criteria": [ ga.NumberOfGenerationsTerminationCriteria(number_of_generations=100) ]
             }
             grid = grid_search.GridSearch(solver, params)
             grid.search(0.0)
             grid_scores = grid.get_grid_scores()
-            
-            fname = './results/classical_operators/A-n80-k10.vrp.grid.csv'
-            grid_scores.to_csv(fname, sep=',', index=False)
-            sys.stdout.write("Finished. Results are at: ./results/classical_operators/A-n80-k10.vrp.grid.csv\n")
-        else:
-            sys.stdout.write("Starting test_4: CLASSICAL OPERATORS, ELITISM ENABLED\n")
-            sys.stdout.write("Input: ./tests/vrp/A-n80-k10.vrp\n")
 
+            fname = './results/correction_operator/A-n80-k10.vrp.grid.csv'
+            grid_scores.to_csv(fname, sep=',', index=False)
+            sys.stdout.write("Finished. Results are at: ./results/correction_operator/A-n80-k10.vrp.grid.csv\n")
+        else:
+            sys.stdout.write("Starting test_4: CORRECTION + SIMPLE RANDOM OPERATORS, ELITISM ENABLED\n")
+            sys.stdout.write("Input: ./tests/vrp/A-n80-k10.vrp\n")
+        
             solver.init_population()
             solver.evolve()
             info = solver.get_generation_info()
-            fname = './results/classical_operators/A-n80-k10.vrp.csv'
+            fname = './results/correction_operator/A-n80-k10.vrp.csv'
             info.to_csv(fname, sep=',', index=False)
 
             plt.plot(info['generation'], info['min'], "r", label="melhor", linewidth=2)
@@ -235,9 +234,8 @@ class ClassicalOperators(unittest.TestCase):
             plt.ylabel("fitness")
             plt.show()
 
-            sys.stdout.write("Finished. Results are at: ./results/classical_operators/A-n80-k10.vrp.csv\n")
+            sys.stdout.write("Finished. Results are at: ./results/correction_operator/A-n80-k10.vrp.csv\n")
         assert True
-
 
     def load_test(self, fname):
         content = open(fname).read().replace('\r', ' ').replace('\n', ' ')
