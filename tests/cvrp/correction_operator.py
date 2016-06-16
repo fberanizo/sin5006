@@ -7,7 +7,7 @@ import unittest, ga, cvrp, grid_search, re, math, numpy, itertools, matplotlib.p
 
 class CorrectionOperator(unittest.TestCase):
     """Test cases for CVRP problem."""
-    grid_search = True
+    grid_search = False
 
     def test_1(self):
         """

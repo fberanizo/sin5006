@@ -114,7 +114,7 @@ O operador crossover permite a criação de novos indivíduos a partir de organi
 O operador de mutação permite inserir diversidade genética entre gerações de indivíduos trocando o valor de genes no cromossomo. Com maior variedade genética o espaço de busca é ampliado, possibilitando sair de situações de mínimo local.
 
 \subsubsection{Elitismo}
-Em algorítmos genéticos o elitismo é a operação de copiar uma dada proporção dos melhores indivíduos para a próxima geração. Esta técnica garante que boas soluções permaneçam na população, evitando-se que o algorítmo deixe de explorar a vizinhança de espaços de busca promissores. Na solução desenvolvida elitismo foi implementado conservando 10\% dos indivíduos com melhor fitness da geração anterior.
+Em algoritmos genéticos o elitismo é a operação de copiar uma dada proporção dos melhores indivíduos para a próxima geração. Esta técnica garante que boas soluções permaneçam na população, evitando-se que o algorítmo deixe de explorar a vizinhança de espaços de busca promissores. Na solução desenvolvida elitismo foi implementado conservando 10\% dos indivíduos com melhor fitness da geração anterior.
 
 % Aplicando operadores clássicos: esses são os operadores da parte I do trabalho. Esses operadores vão gerar muitas soluções infactíveis. Vocês devem analisar essa infactibilidade, mostrando como ela ocorre e por que. Discutam suas observações.
 % b) aplicando operadores de correção: esses operadores são novos operadores, que vocês devem criar (há pelo menos um na bibliografia disponibilizada), para corrigir a infactibilidade criada na letra 
@@ -122,9 +122,9 @@ Em algorítmos genéticos o elitismo é a operação de copiar uma dada proporç
 % TODO explicar operadores da primeira parte (crossover de um ponto, uniforme)
 
 \subsection{Cromossomo}
-O modelo de genótipo escolhido foi uma vetor que guarda a sequencia de clientes servidas por um veículo, e separada por um caracter ``X'' que representa o início de um outro veículo.
+O modelo de genótipo escolhido foi um vetor que guarda a sequência de clientes servidos por um veículo, e separado por um caracter ``X'' que representa o início de um outro veículo.
 
-A escolha deste modelo de cromossomo foi devida a facilidade de manipulação do mesmo. Dessa forma, foi simples de executar os operadores de crossover e mutação bem como no cálculo de fitness.
+A escolha deste modelo de cromossomo foi devida a facilidade de manipulação do mesmo. Dessa forma foi simples de executar os operadores de crossover e mutação bem como realizar o cálculo de fitness.
 
 No entanto, esse modelo de cromossomo facilitou a geração de solução infactíveis, como será explicado na próxima seção.
 
@@ -190,7 +190,7 @@ SRCrossover(P1,P2)
 \end{verbatim}
 
 \subsection{Função Fitness}
-Para avaliar a seleção natural, cada indivíduo é avaliado em termos de seu valor de fitness. Essa medida, mede a qualidade das soluções e permite sua comparação.
+Para executar a seleção natural, cada indivíduo é avaliado em termos de seu valor de fitness. Essa medida, estima a qualidade das soluções e permite sua comparação.
 
 Na parte 1 do trabalho, o tipo do problema não exigiu muito acerto da função de fitness. No entanto, para a segunda parte foi necessário contornar várias dificuldades, como por exemplo: avaliar soluções infactíveis.\\
 A forma adotada neste trabalho para lidar com soluções infactíveis foi somar um valor de penalidade ao fitness da solução.\\
@@ -338,10 +338,10 @@ A-n80-k10 & 3030 & 42\\ % 1763
 
 
 \subsection{Simple Random Mutation/Crossover}
-Na segunda parte do trabalho foram aplicados os operadores SRM e SRC descritos nas seções 2D e 2E. Após o tuning dos parâmetros, os melhores resultados foram obtidos para taxas de mutação = 0.125, taxa de crossover = 0.625, taxa de reprodução = 0.25, e tamanho de população = 4096 (máximo). Baseado nas experiências da parte I, a técnica de elitismo foi mantido ligada.\\
+Na segunda parte do trabalho foram aplicados os operadores SRM e SRC descritos nas seções 2D e 2E. Após o tuning dos parâmetros, os melhores resultados foram obtidos para taxas de mutação = 0.125, taxa de crossover = 0.625, taxa de reprodução = 0.25, e tamanho de população = 4096 (máximo). Baseado nas experiências da parte I, a técnica de elitismo foi mantida ligada.\\
 Em todas as execuções o critério de parada foi número de gerações = 100.
 
-
+A figura \ref{sr} mostra  a evolução das soluções para SRC/SRM. É possível observar que a solução não melhorou muito em relação aos operadores clássicos. Os motivos serão discutidos na seção IV.
 
 A Tabela \ref{table_srm} mostra os melhores valores de fitness obtidos para SMR/SRC.
 
@@ -362,9 +362,24 @@ A-n80-k10 & 3755 & 53\\ % 1763
 \end{tabular}
 \end{table}
 
+\begin{figure*}[!t]
+\centering
+\subfloat[Instância P-n16-k8]{\includegraphics[width=3.5in]{sr_P-n16-k8}%
+\label{sr_P-n16-k8}}
+\hfil
+\subfloat[Instância A-n80-k10]{\includegraphics[width=3.5in]{sr_A-n80-k10}%
+\label{sr_A-n80-k10}}
+\caption{Evolução para Operadores SRC/SRM.}
+\label{sr}
+\end{figure*}
+
 \newpage
 
 \subsection{Operador de Correção + Simple Random Mutation/Crossover}
+
+Na terceira parte do trabalho foi estudado o uso de um operador de correção de soluções. Após o tuning dos parâmetros, os melhores resultados foram obtidos para taxas de mutação = 0.125, taxa de crossover = 0.625, taxa de reprodução = 0.25, e tamanho de população = 4096 (máximo). Baseado nas experiências da parte I, a técnica de elitismo foi mantida ligada.\\
+
+A figura \ref{ro} mostra a evolução das soluções para RO + SRC/SRM. É possível observar que diferentemente dos métodos anteriores, neste há uma evolução mais visível dos valores de solução. Na seção IV são discutidos os motivos que fazem deste método o que apresenta os melhores resultados.
 
 A Tabela \ref{table_correction} mostra os melhores valores de fitness obtidos para RO + SMR/SRC.
 
@@ -384,6 +399,18 @@ A-n80-k10 & 3204 & 45\\
 \hline
 \end{tabular}
 \end{table}
+
+\begin{figure*}[!t]
+\centering
+\subfloat[Instância A-n32-k5]{\includegraphics[width=3.5in]{ro_A-n32-k5}%
+\label{ro_A-n32-k5}}
+\hfil
+\subfloat[Instância A-n80-k10]{\includegraphics[width=3.5in]{ro_A-n80-k10}%
+\label{ro_A-n80-k10}}
+\caption{Evolução para RO + SRC/SRM.}
+\label{ro}
+\end{figure*}
+
 
 \section{Discussão}
 Analisando os resultados obtidos a partir do uso técnicas descritas nas seções anteriores, é possível avaliar que nenhuma delas levou a excelentes resultados. Nenhuma das técnicas conseguiu alcançar os valores ótimos das instâncias, mesmo daquelas de dimensão pequena.
