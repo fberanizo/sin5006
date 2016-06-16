@@ -42,7 +42,7 @@ class CVRPFitnessEvaluator(ga.FitnessEvaluator):
         fitness += self.distances.item((previous-1, 0))
 
         if not feasible:
-            fitness = 2*fitness
+            fitness = self.distances.sum()
 
         return fitness
 

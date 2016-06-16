@@ -18,7 +18,7 @@ class CorrectionOperator(unittest.TestCase):
         Elitism is enabled
         Termination criteria: number of generations = 100
         Parameters:
-            population_size: 27
+            population_size: 97
             reproduction rate: 0.375
             crossover rate: 0.375
             mutation rate: 0.25
@@ -28,7 +28,7 @@ class CorrectionOperator(unittest.TestCase):
 
         individual_factory = cvrp.CVRPIndividualFactory(nodes, capacity, distances, demand, individual_type='corrected')
         termination_criteria = ga.NumberOfGenerationsTerminationCriteria(number_of_generations=100)
-        solver = ga.GeneticAlgorithm(individual_factory, population_size=27, reproduction= 0.375, crossover= 0.375, mutation=0.25, elitism=True, termination_criteria=termination_criteria)
+        solver = ga.GeneticAlgorithm(individual_factory, population_size=97, reproduction= 0.375, crossover= 0.375, mutation=0.25, elitism=True, termination_criteria=termination_criteria)
 
         if self.grid_search:
             params = {
@@ -61,6 +61,7 @@ class CorrectionOperator(unittest.TestCase):
             legend = plt.legend(loc='lower right', numpoints=1)
             plt.xlabel("geracoes")
             plt.ylabel("fitness")
+            plt.yscale('log')
             plt.show()
 
             sys.stdout.write("Finished. Results are at: ./results/correction_operator/A-n32-k5.vrp.csv\n")
@@ -75,7 +76,7 @@ class CorrectionOperator(unittest.TestCase):
         Elitism is enabled
         Termination criteria: number of generations = 100
         Parameters:
-            population_size: 27
+            population_size: 97
             reproduction rate: 0.375
             crossover rate: 0.25
             mutation rate: 0.375
@@ -85,7 +86,7 @@ class CorrectionOperator(unittest.TestCase):
 
         individual_factory = cvrp.CVRPIndividualFactory(nodes, capacity, distances, demand, individual_type='corrected')
         termination_criteria = ga.NumberOfGenerationsTerminationCriteria(number_of_generations=100)
-        solver = ga.GeneticAlgorithm(individual_factory, population_size=27, reproduction= 0.375, crossover=0.25, mutation= 0.375, elitism=True, termination_criteria=termination_criteria)
+        solver = ga.GeneticAlgorithm(individual_factory, population_size=97, reproduction= 0.375, crossover=0.25, mutation= 0.375, elitism=True, termination_criteria=termination_criteria)
         
         if self.grid_search:
             params = {
@@ -118,6 +119,7 @@ class CorrectionOperator(unittest.TestCase):
             legend = plt.legend(loc='lower right', numpoints=1)
             plt.xlabel("geracoes")
             plt.ylabel("fitness")
+            plt.yscale('log')
             plt.show()
 
             sys.stdout.write("Finished. Results are at: ./results/correction_operator/B-n31-k5.vrp.csv\n")
@@ -132,7 +134,7 @@ class CorrectionOperator(unittest.TestCase):
         Elitism is enabled
         Termination criteria: number of generations = 100
         Parameters:
-            population_size: 27
+            population_size: 97
             reproduction rate: 0.25
             crossover rate: 0.625
             mutation rate: 0.125
@@ -142,7 +144,7 @@ class CorrectionOperator(unittest.TestCase):
 
         individual_factory = cvrp.CVRPIndividualFactory(nodes, capacity, distances, demand, individual_type='corrected')
         termination_criteria = ga.NumberOfGenerationsTerminationCriteria(number_of_generations=100)
-        solver = ga.GeneticAlgorithm(individual_factory, population_size=27, reproduction=0.25, crossover=0.625, mutation=0.125, elitism=True, termination_criteria=termination_criteria)
+        solver = ga.GeneticAlgorithm(individual_factory, population_size=97, reproduction=0.25, crossover=0.625, mutation=0.125, elitism=True, termination_criteria=termination_criteria)
         
         if self.grid_search:
             params = {
@@ -175,6 +177,7 @@ class CorrectionOperator(unittest.TestCase):
             legend = plt.legend(loc='lower right', numpoints=1)
             plt.xlabel("geracoes")
             plt.ylabel("fitness")
+            plt.yscale('log')
             plt.show()
 
             sys.stdout.write("Finished. Results are at: ./results/correction_operator/P-n16-k8.vrp.csv\n")
@@ -189,7 +192,7 @@ class CorrectionOperator(unittest.TestCase):
         Elitism is enabled
         Termination criteria: number of generations = 100
         Parameters:
-            population_size: 27
+            population_size: 97
             reproduction rate: 0.25
             crossover rate: 0.625
             mutation rate: 0.125
@@ -199,7 +202,7 @@ class CorrectionOperator(unittest.TestCase):
 
         individual_factory = cvrp.CVRPIndividualFactory(nodes, capacity, distances, demand, individual_type='corrected')
         termination_criteria = ga.NumberOfGenerationsTerminationCriteria(number_of_generations=100)
-        solver = ga.GeneticAlgorithm(individual_factory, population_size=27, reproduction=0.25, crossover=0.625, mutation=0.125, elitism=True, termination_criteria=termination_criteria)
+        solver = ga.GeneticAlgorithm(individual_factory, population_size=97, reproduction=0.25, crossover=0.625, mutation=0.125, elitism=True, termination_criteria=termination_criteria)
         
         if self.grid_search:
             params = {
@@ -232,6 +235,7 @@ class CorrectionOperator(unittest.TestCase):
             legend = plt.legend(loc='lower right', numpoints=1)
             plt.xlabel("geracoes")
             plt.ylabel("fitness")
+            plt.yscale('log')
             plt.show()
 
             sys.stdout.write("Finished. Results are at: ./results/correction_operator/A-n80-k10.vrp.csv\n")

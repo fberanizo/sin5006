@@ -56,7 +56,7 @@ class GeneticAlgorithm(object):
         # In order to roulette wheel selection work with negative values, 
         # we sum all fitness values to the absolute value of the most negative plus one
         most_negative = self.population_fitness.min()
-        self.normalized_fitness = numpy.asarray(map(lambda fitness: 1/math.pow(fitness+numpy.absolute(most_negative)+1, 3), self.population_fitness))
+        self.normalized_fitness = numpy.asarray(map(lambda fitness: 1/math.pow(fitness+numpy.absolute(most_negative)+1, 1), self.population_fitness))
         s = float(self.normalized_fitness.sum())
         self.normalized_fitness = numpy.asarray(map(lambda fitness: fitness/s, self.normalized_fitness))
         #print self.population_fitness.min()
@@ -76,7 +76,7 @@ class GeneticAlgorithm(object):
 
             if self.elitism:
                 # Keeps the 10% best individuals
-                best_individuals = heapq.nlargest(int(0.1*self.population_size), self.population, lambda individual: individual.get_fitness())
+                best_individuals = heapq.nsmallest(int(0.1*self.population_size), self.population, lambda individual: individual.get_fitness())
                 next_generation += copy.deepcopy(best_individuals)
 
             # select genetic operation probabilistically
@@ -104,7 +104,7 @@ class GeneticAlgorithm(object):
             self.population = next_generation
             self.population_fitness = numpy.asarray(map(lambda individual: individual.get_fitness(), self.population))
             most_negative = self.population_fitness.min()
-            self.normalized_fitness = numpy.asarray(map(lambda fitness: 1/math.pow(fitness+numpy.absolute(most_negative)+1, 3), self.population_fitness))
+            self.normalized_fitness = numpy.asarray(map(lambda fitness: 1/math.pow(fitness+numpy.absolute(most_negative)+1, 1), self.population_fitness))
             s = float(self.normalized_fitness.sum())
             self.normalized_fitness = numpy.asarray(map(lambda fitness: fitness/s, self.normalized_fitness))
 

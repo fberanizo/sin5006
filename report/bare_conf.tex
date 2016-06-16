@@ -113,6 +113,8 @@ O operador crossover permite a criação de novos indivíduos a partir de organi
 \subsubsection{Mutação}
 O operador de mutação permite inserir diversidade genética entre gerações de indivíduos trocando o valor de genes no cromossomo. Com maior variedade genética o espaço de busca é ampliado, possibilitando sair de situações de mínimo local.
 
+\subsubsection{Elitismo}
+Em algorítmos genéticos o elitismo é a operação de copiar uma dada proporção dos melhores indivíduos para a próxima geração. Esta técnica garante que boas soluções permaneçam na população, evitando-se que o algorítmo deixe de explorar a vizinhança de espaços de busca promissores. Na solução desenvolvida elitismo foi implementado conservando 10\% dos indivíduos com melhor fitness da geração anterior.
 
 % Aplicando operadores clássicos: esses são os operadores da parte I do trabalho. Esses operadores vão gerar muitas soluções infactíveis. Vocês devem analisar essa infactibilidade, mostrando como ela ocorre e por que. Discutam suas observações.
 % b) aplicando operadores de correção: esses operadores são novos operadores, que vocês devem criar (há pelo menos um na bibliografia disponibilizada), para corrigir a infactibilidade criada na letra 
@@ -139,7 +141,7 @@ No entanto, esse modelo de cromossomo facilitou a geração de solução infact�
 \subsection{Problemas com operadores}
 Durante o desenvolvimento da solução, foi detectado que a aplicação dos operadores de mutação e de crossover poderia criar soluções infactíveis para o problema. Para um cromossomo cujos genes representam um caminho, a aplicação de crossover leva fatalmente à geração de caminhos incompletos. A figura 1 mostra um exemplo de crossover que gera solução infactível. \\
 
-Para contornar este problema uma primeira abordagem tomada foi repetir a realização do crossover por quantas vezes quanto necessário até que seja gerado um crossover válido. No entanto, após a realização de testes esta possibilidade foi descartada, uma vez que demorava muito até que surgisse uma solução válida. Além disso, muito recurso computacional era disperdiçado, fazendo com que essa solução fosse inviável. Assim, foi necessário buscar alternativas na literatura para resolver o problema.
+Para contornar este problema uma primeira abordagem tomada foi repetir a realização do crossover por quantas vezes quanto necessário até que seja gerado um crossover válido. No entanto, após a realização de testes esta possibilidade foi descartada, uma vez que demorava muito até que surgisse uma solução válida. Além disso, muito recurso computacional era desperdiçado, fazendo com que essa solução fosse inviável. Assim, foi necessário buscar alternativas na literatura para resolver o problema.
 
 % We also have to permutate the parents to find the fittings ones, and it is not sure, that we will find them. This is also rather time consuming and resource consuming
 
@@ -151,66 +153,88 @@ A primeira solução escolhida observando-se a literatura foi o Simple Random Mu
 O operador inicia selecionando aleatoriamente um cliente. O cliente é então removido de sua rota para evitar ficar duplicado na solução. A seguir é executada a função \textit{BestInsertion} que retorna o índice que indica o melhor lugar para inserir o cliente removido. O cliente é então inserido na posição retornada por best-insertion. \\
 
 BestInsertion estima o custo para inserir uma subrota k1..kn entre dois clientes m e m+1 como: \[c = dist(m; m+1) - dist(m,k1) - dist(kn, m+1)\]
-Os cliente m e m+1 que maximizam c são então escolhido para inserção da subrota.\\
+Os clientes $m$ e $m+1$ que maximizam $c$ são então escolhidos para inserção da subrota.\\
 
 \textbf{Essa técnica não verifica se a solução continua factível}, pois não verifica se a nova rota excede as capacidades do veículo.
 
+A seguir está o algoritmo em pseudocódigo para o problema:
+
+\newpage
+
 \begin{verbatim}
 Mutation(offspring, pSame)
-NR <- number of routes in offspring
-jMut <- random(0,NR)
-RL <- number of customers in route jMut
-kMut <- random(0,RL)
-custo <- offspring[jMut][kMut]
+  NR <- number of routes in offspring
+  jMut <- random(0,NR)
+  RL <- number of customers in route jMut
+  kMut <- random(0,RL)
+  custo <- offspring[jMut][kMut]
 
-delete cust from jMut
-prob <- random(1,100)
-if prob < pSame
+  delete cust from jMut
   bestInd <- [jMut,BestInsertion(cust,jMut)]
-else do j <- random(0,NR)
-      while j = jMut
-        bestInd <- [j, BestInsertion(cust,j)]
-insertCust(cust, bestInd)
-return offspring
+  insertCust(cust, bestInd)
+  return offspring
 \end{verbatim}
 
 \subsection{Simple Random Crossover}
-A técnica de Simple Random Crossover (SRC) é análoga a SRM. Dados 2 cromossomos P1 e P2, é feita a seleção de uma subrota de P2. Em seguida, os elementos da subrota são removidos de P1. A função BestInsertion é executada então em P1 e, na posição retornada é feita a inserção da subrota.
+A técnica de Simple Random Crossover (SRC) é análoga a SRM. Dados 2 cromossomos P1 e P2, é feita a seleção de uma subrota de P2. Em seguida, os elementos da subrota são removidos de P1. A função BestInsertion é executada em P1 e, na posição retornada é feita a inserção da subrota. O algorítmo em pseudo código é este:
 
 \begin{verbatim}
 SRCrossover(P1,P2)
-copy individual P1 into offspring
-randomly select a subroute from P2
-delete the members of the subroute from the offspring
-bestInd <- BestInsertion(offspring, subroute)
-insertSubRoute(offspring, bestInd, subroute)
-return offspring
+  copy individual P1 into offspring
+  randomly select a subroute from P2
+  delete the members of the subroute from the 
+  offspring
+  bestInd <- BestInsertion(offspring, subroute)
+  insertSubRoute(offspring, bestInd, subroute)
+  return offspring
 \end{verbatim}
 
-\section{Função Fitness}
+\subsection{Função Fitness}
 Para avaliar a seleção natural, cada indivíduo é avaliado em termos de seu valor de fitness. Essa medida, mede a qualidade das soluções e permite sua comparação.
 
-Na parte 1 do trabalho o tipo do problema não exigiu muito trabalho de acerto da função de fitness. No entanto, nessa parte foi necessário contornar várias dificuldades, por exemplo: avaliar soluções infactíveis.\\
+Na parte 1 do trabalho, o tipo do problema não exigiu muito acerto da função de fitness. No entanto, para a segunda parte foi necessário contornar várias dificuldades, como por exemplo: avaliar soluções infactíveis.\\
 A forma adotada neste trabalho para lidar com soluções infactíveis foi somar um valor de penalidade ao fitness da solução.\\
-\textbf{Se a demanda de um veículo exceder sua capacidade, será aplicada penalidade igual à duas vezes a distância das rotas.}
+\textbf{Se a demanda de um veículo exceder sua capacidade, é aplicada penalidade igual à soma da distância de todos caminhos existentes.}
+
+Para chegar a esta fórmula de penalidade foram realizadas várias tentativas. A primeira escolha de penalidade havia sido um valor arbitrário muito alto. No entanto, isso aumenta significativamente o fitness médio da população e fazendo o algorítmo convergir muito rapidamente. Outra desvantagem diz respeito à visualização em gráfico, que fica prejudicada. \\
+
+A penalidade adotada consegue resolver esses dois problemas.\\
+
+\subsection{Operador de Reparação}
+Os algoritmos SRC e SRM criam muitas soluções que violam restrições de capacidade do CVRP. Isso faz com que as penalidades na função fitness sejam muito predominantes como pode ser visto na figura \ref{fig_A-n80-k10}. Apesar de ser interessante que algumas soluções inviáveis sejam aproveitadas nas primeiras iterações, a população pode ter dificuldades em melhorar se a maioria das soluções tiverem fitness muito alto. Para lidar com este tipo de problema foi criado um operador de reparação de soluções.
+
+O operador de reparação (RO) é utilizado para diminuir as rotas existentes de uma solução. Um cliente é selecionado da rota que mais viola a restrição de capacidade. Em seguida o mesmo é transferido para o final da rota com menor demanda total.
 
 
-\section{Operador de Reparação}
-O operador de reparação (RO) é utilizado para diminuir as rotas existentes. Um cliente é selecionado da rota que mais viola a restrição de capacidade. Em seguida o mesmo é transferido para o final da rota com menor soma de demanda.
+O algorítmo em pseudo-código para reparação de solução é este:
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=2.5in]{A-n80-k10}
+% where an .eps filename suffix will be assumed under latex, 
+% and a .pdf suffix will be assumed for pdflatex; or what has been declared
+% via \DeclareGraphicsExtensions.
+\caption{Evolução da Solução de A-n80-k10}
+\label{fig_A-n80-k10}
+\end{figure}
+
+
 \begin{verbatim}
 Repair(offspring)
-jMax <- the index of the route in the offspring with largest total demand
-maxDem <- the total demand of route jMax 
-jMin <- the index of the route in the offspring with smallest total demand
-if maxDem > K
-  randomly choose a customer from route jMax
-  delete the customer from route jMin
-  insert the customer at the end of route jMin
-return offspring
+  jMax <- the index of the route in the offspring 
+          with largest total demand
+  maxDem <- the total demand of route jMax 
+  jMin <- the index of the route in the offspring
+           with smallest total demand
+  if maxDem > K
+    randomly choose a customer from route jMax
+    delete the customer from route jMin
+    insert the customer at the end of route jMin
+  return offspring
 \end{verbatim}
 
 
-\section{Instâncias de Teste}
+\subsection{Instâncias de Teste}
 As instâncias de teste utilizadas foram obtidas a partir do site http://www.bernabe.dorronsoro.es/vrp/. Neste site estão presentes variadas instâncias para o problema do CVRP, bem como seus valores ótimos/melhores conhecidos.\\
 Para a realização dos testes foram selecionadas uma instância de dimensão pequena cada grupo A, B e P de Augerat et al.. Além disso, foi utilizada uma instância de dimensão alta do grupo A.\\
 A Tabela \ref{table_optimum} mostra os valores ótimos para as instâncias de teste avaliadas.
@@ -233,7 +257,7 @@ A-n80-k10 & 1763\\
 \end{table}
 
 
-\section{Inicialização de População}
+\subsection{Inicialização de População}
 Para a geração de uma população inicial válida, foi tomada a seguinte abordagem:
 \begin{enumerate}
 \item Gerar uma ordenação aleatória dos clientes
@@ -244,7 +268,7 @@ Para a geração de uma população inicial válida, foi tomada a seguinte abord
 \textbf{Essa abordagem sempre cria soluções factíveis, embora não garanta bons valores de fitness.}
 
 
-\section{Tuning de Parâmetros}
+\subsection{Tuning de Parâmetros}
 Existem alguns parâmetros que são utilizados no processo de resolução do VRP através algoritmos genéticos. Para obter bons resultados é necessário ajustá-los. Idealmente, cada parâmetro deveriam ser testados exaustivamente, num universo contínuo de valores. No entanto, este processo consome demasiado tempo, sendo necessário restringir o universo de busca.\\
 No desenvolvimento deste trabalho, a abordagem tomada neste processo foi a execução de um \textit{Grid Search} de parâmetros. Os seguintes parâmetros foram buscados:
 \begin{itemize}
@@ -254,7 +278,7 @@ No desenvolvimento deste trabalho, a abordagem tomada neste processo foi a execu
 \item Taxa de Mutação
 \end{itemize}
 
-\ref{table:table_tuning_parameters} mostra as combinações de parâmetros testadas durante o grid search. Os valores de população foram escolhidos em escala logarítmica para que tivessem grandezas bem diferentes, e assim apresentassem diferença significativa de resultados. As taxas, por sua vez foram testadas em combinações que não permitiam probabilidade zero, para que todos operadores fossem testados. Ao mesmo tempo, foi possível testar taxas bem distintas (ex: 0.75, 0.125, 0.125) permitindo observar o comportamento com operadores dominantes.
+\ref{table_tuning_parameters} mostra as combinações de parâmetros testadas durante o grid search. Os valores de população foram escolhidos em escala logarítmica para que tivessem grandezas bem diferentes, e assim apresentassem diferença significativa de resultados. As taxas, por sua vez foram testadas em combinações que não permitiam probabilidade zero, para que todos operadores fossem testados. Ao mesmo tempo, foi possível testar taxas bem distintas (ex: 0.75, 0.125, 0.125) permitindo observar o comportamento com operadores dominantes.
 
 \begin{table}[!t]
 \renewcommand{\arraystretch}{1.3}
@@ -273,19 +297,79 @@ Taxas de Reprodução, \\Crossover e Mutação & Combinações de 0.125, 0.25, \
 \end{table}
 
 
-\subsection{Resultados do Tuning}
-%% TODO
+\section{Resultados}
 
+\subsection{Operadores Clássicos}
+A aplicação do operador clássico de crossover de um ponto não foi possível devidos aos problemas descritos da seção II C. Assim, o teste foi restrito aos operadores de mutação e de reprodução. 
+
+A Tabela \ref{table_classical_operators} mostra os melhores valores de fitness obtidos para os operadores clássicos.
+
+\begin{table}[!t]
+\renewcommand{\arraystretch}{1.3}
+\centering
+\caption{Operadores Clássicos}
+\label{table_classical_operators}
+\begin{tabular}{|c||c||c|}
+\hline
+Instância de Teste & Valor Obtido & Dif. do Ótimo (\%)\\
+\hline
+A-n32-k5 & 887 & 12\\
+B-n31-k5 & 778 & 14\\
+P-n16-k8 & 478 & 9\\
+A-n80-k10 & 3458 & 49\\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Simple Random Mutation/Crossover}
+A Tabela \ref{table_srm} mostra os melhores valores de fitness obtidos para SMR/SRC.
+
+\begin{table}[!t]
+\renewcommand{\arraystretch}{1.3}
+\centering
+\caption{Simple Random Mutation/Crossover}
+\label{table_srm}
+\begin{tabular}{|c||c||c|}
+\hline
+Inst. & Valor Obtido & Dif. do Ótimo (\%)\\
+\hline
+A-n32-k5 & 1004 & 22\\
+B-n31-k5 & 747 & 10\\
+P-n16-k8 & 461 & 6\\
+A-n80-k10 & 3755 & 53\\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Operador de Correção + Simple Random Mutation/Crossover}
+A Tabela \ref{table_correction} mostra os melhores valores de fitness obtidos para RO + SMR/SRC.
+
+\begin{table}[!t]
+\renewcommand{\arraystretch}{1.3}
+\centering
+\caption{Operador de Correção + Simple Random Mutation/Crossover}
+\label{table_correction}
+\begin{tabular}{|c||c||c|}
+\hline
+Inst. & Valor Obtido & Dif. do Ótimo (\%)\\
+\hline
+A-n32-k5 & 887 & 12\\
+B-n31-k5 & 767 & 12\\
+P-n16-k8 & 451 & 4\\
+A-n80-k10 & 3204 & 45\\
+\hline
+\end{tabular}
+\end{table}
 
 \section{Discussão}
-Analisando as técnicas avaliadas nas seções anteriores, é possível avaliar que nenhuma delas levou a excelentes resultados. Nenhuma das técnicas conseguiu alcançar os valores ótimos das instâncias, mesmo daquelas de dimensão pequena.
+Analisando os resultados obtidos a partir do uso técnicas descritas nas seções anteriores, é possível avaliar que nenhuma delas levou a excelentes resultados. Nenhuma das técnicas conseguiu alcançar os valores ótimos das instâncias, mesmo daquelas de dimensão pequena.
 Aquela que obteve melhores resultados foi a Simple Random Mutation/Crossover com correção. Tal técnica é a mais elaborada dentre as que foram desenvolvidas, no entanto ainda é uma heurística simples, dependente da aleatoriedade. 
 
-Uma possível explicação para o desempenho ruim de SRC/SRM é é que são geradas muitas soluções infactíveis. Em um cenário que indivíduos pais são boas soluções, muito provavelmente cada veículo da rota está cheio. A aplicação de \textit{BestInsertion} muito provavelmente levará à solução infactível. 
+Uma possível explicação para o desempenho ruim de SRC/SRM é que são geradas muitas soluções infactíveis. Em um cenário que indivíduos pais são boas soluções, muito provavelmente cada veículo da rota está cheio. A aplicação de \textit{BestInsertion} muito provavelmente levará à solução infactível. 
 
 Quanto aos operadores clássicos de crossover e mutação, eles claramente não são puramente aplicáveis ao problema. É difícil criar novos indivíduos válidos a partir do crossover de um ponto, fazendo do operador de mutação (permutação) a unica opção aplicável. No entanto, observou-se que isso causa muita aleatoriedade nas soluções e contribui para que ela não converja facilmente para o ótimo.
 
-A aplicação do operador de correção...
+Por fim, é possível avaliar que a aplicação do operador de correção fez melhorar os resultados. Essa técnica é bastante adequada para uso com SRC e SRM, uma vez que tenta melhorar soluções infactíveis. No entanto, a simples aplicação desta técnica não resolve todos os problemas. Este algoritmo não garante que a solução se torna factível.
 
 % For peer review papers, you can put extra information on the cover
 % page as needed:
@@ -297,27 +381,6 @@ A aplicação do operador de correção...
 % creates the second title. It will be ignored for other modes.
 \IEEEpeerreviewmaketitle
 
-
-
-\section{Introduction}
-% no \IEEEPARstart
-This demo file is intended to serve as a ``starter file''
-for IEEE conference papers produced under \LaTeX\ using
-IEEEtran.cls version 1.8b and later.
-% You must have at least 2 lines in the paragraph with the drop letter
-% (should never be an issue)
-I wish you the best of success.
-
-\hfill mds
- 
-\hfill August 26, 2015
-
-\subsection{Subsection Heading Here}
-Subsection text here.
-
-
-\subsubsection{Subsubsection Heading Here}
-Subsubsection text here.
 
 % An example of a floating figure using the graphicx package.
 % Note that \label must occur AFTER (or within) \caption.
@@ -414,27 +477,6 @@ Subsubsection text here.
 % \fnbelowfloat command of the stfloats package.
 
 
-
-
-\section{Conclusion}
-The conclusion goes here.
-
-
-
-
-% conference papers do not normally have an appendix
-
-
-% use section* for acknowledgment
-\section*{Acknowledgment}
-
-
-The authors would like to thank...
-
-
-
-
-
 % trigger a \newpage just before the given reference
 % number - used to balance the columns on the last page
 % adjust value as needed - may need to be readjusted if
@@ -459,9 +501,13 @@ The authors would like to thank...
 % (used to reserve space for the reference number labels box)
 \begin{thebibliography}{1}
 
-\bibitem{IEEEhowto:kopka}
-H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
-  0.5em minus 0.4em\relax Harlow, England: Addison-Wesley, 1999.
+\bibitem{bib1:bjarnad}
+A.S. Bjarnadóttir, \emph{Solving the Vehicle Routing Problema with Genetic Algoritms.  Master Thesis.}\\
+Technical Universituy of Denmark, 2004.
+
+\bibitem{bib1:bjarnad}
+A. Kovács, \emph{Solving the Vehicle Routing Problem with Genetic Algoritm and Simulated Annealing. Master Thesis.}\\
+Hoogskolan Dalarna, Sweden, 2008.
 
 \end{thebibliography}
 
