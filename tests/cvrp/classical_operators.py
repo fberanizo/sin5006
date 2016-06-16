@@ -7,7 +7,7 @@ import unittest, ga, cvrp, grid_search, re, math, numpy, itertools, matplotlib.p
 
 class ClassicalOperators(unittest.TestCase):
     """Test cases for CVRP problem."""
-    grid_search = True
+    grid_search = False
 
     def test_1(self):
         """
@@ -18,17 +18,17 @@ class ClassicalOperators(unittest.TestCase):
         Elitism is enabled
         Termination criteria: number of generations = 100
         Parameters:
-            population_size: 97
-            reproduction rate: 0.5
+            population_size: 4096
+            reproduction rate: 0.375
             crossover rate: 0
-            mutation rate: 0.5
+            mutation rate: 0.625
         """
         fname = './input/A-n32-k5.vrp'
         nodes, capacity, distances, demand = self.load_test(fname)
 
         individual_factory = cvrp.CVRPIndividualFactory(nodes, capacity, distances, demand, 'classical')
         termination_criteria = ga.NumberOfGenerationsTerminationCriteria(number_of_generations=100)
-        solver = ga.GeneticAlgorithm(individual_factory, population_size=97, reproduction=0.5, crossover=0.0, mutation=0.5, elitism=True, termination_criteria=termination_criteria)
+        solver = ga.GeneticAlgorithm(individual_factory, population_size=4096, reproduction=0.375, crossover=0.0, mutation=0.625, elitism=True, termination_criteria=termination_criteria)
 
         if self.grid_search:
             params = {
@@ -77,17 +77,17 @@ class ClassicalOperators(unittest.TestCase):
         Elitism is enabled
         Termination criteria: number of generations = 100
         Parameters:
-            population_size: 97
-            reproduction rate: 0.75
+            population_size: 4096
+            reproduction rate: 0.375
             crossover rate: 0
-            mutation rate: 0.25
+            mutation rate: 0.625
         """
         fname = './input/B-n31-k5.vrp'
         nodes, capacity, distances, demand = self.load_test(fname)
 
         individual_factory = cvrp.CVRPIndividualFactory(nodes, capacity, distances, demand)
         termination_criteria = ga.NumberOfGenerationsTerminationCriteria(number_of_generations=100)
-        solver = ga.GeneticAlgorithm(individual_factory, population_size=97, reproduction=0.75, crossover=0.0, mutation=0.25, elitism=True, termination_criteria=termination_criteria)
+        solver = ga.GeneticAlgorithm(individual_factory, population_size=4096, reproduction=0.375, crossover=0.0, mutation=0.625, elitism=True, termination_criteria=termination_criteria)
 
         if self.grid_search:
             params = {
@@ -135,17 +135,17 @@ class ClassicalOperators(unittest.TestCase):
         Elitism is enabled
         Termination criteria: number of generations = 100
         Parameters:
-            population_size: 97
-            reproduction rate: 0.2
+            population_size: 4096
+            reproduction rate: 0.375
             crossover rate: 0
-            mutation rate: 0.8
+            mutation rate: 0.625
         """
         fname = './input/P-n16-k8.vrp'
         nodes, capacity, distances, demand = self.load_test(fname)
 
         individual_factory = cvrp.CVRPIndividualFactory(nodes, capacity, distances, demand)
         termination_criteria = ga.NumberOfGenerationsTerminationCriteria(number_of_generations=100)
-        solver = ga.GeneticAlgorithm(individual_factory, population_size=97, reproduction=0.2, crossover=0.0, mutation=0.8, elitism=True, termination_criteria=termination_criteria)
+        solver = ga.GeneticAlgorithm(individual_factory, population_size=4096, reproduction=0.375, crossover=0.0, mutation=0.625, elitism=True, termination_criteria=termination_criteria)
 
         if self.grid_search:
             params = {
@@ -193,17 +193,17 @@ class ClassicalOperators(unittest.TestCase):
         Elitism is enabled
         Termination criteria: number of generations = 100
         Parameters:
-            population_size: 97
-            reproduction rate: 0.2
+            population_size: 4096
+            reproduction rate: 0.25
             crossover rate: 0
-            mutation rate: 0.8
+            mutation rate: 0.75
         """
         fname = './input/A-n80-k10.vrp'
         nodes, capacity, distances, demand = self.load_test(fname)
 
         individual_factory = cvrp.CVRPIndividualFactory(nodes, capacity, distances, demand)
         termination_criteria = ga.NumberOfGenerationsTerminationCriteria(number_of_generations=100)
-        solver = ga.GeneticAlgorithm(individual_factory, population_size=97, reproduction=0.2, crossover=0.0, mutation=0.8, elitism=True, termination_criteria=termination_criteria)
+        solver = ga.GeneticAlgorithm(individual_factory, population_size=4096, reproduction=0.25, crossover=0.0, mutation=0.75, elitism=True, termination_criteria=termination_criteria)
 
         if self.grid_search:
             params = {

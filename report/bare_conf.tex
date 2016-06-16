@@ -278,7 +278,7 @@ No desenvolvimento deste trabalho, a abordagem tomada neste processo foi a execu
 \item Taxa de Mutação
 \end{itemize}
 
-\ref{table_tuning_parameters} mostra as combinações de parâmetros testadas durante o grid search. Os valores de população foram escolhidos em escala logarítmica para que tivessem grandezas bem diferentes, e assim apresentassem diferença significativa de resultados. As taxas, por sua vez foram testadas em combinações que não permitiam probabilidade zero, para que todos operadores fossem testados. Ao mesmo tempo, foi possível testar taxas bem distintas (ex: 0.75, 0.125, 0.125) permitindo observar o comportamento com operadores dominantes.
+A tabela \ref{table_tuning_parameters} mostra as combinações de parâmetros testadas durante o grid search. Os valores de população foram escolhidos em escala logarítmica para que tivessem grandezas bem diferentes, e assim apresentassem diferença significativa de resultados. As taxas, por sua vez foram testadas em combinações que não permitiam probabilidade zero, para que todos operadores fossem testados. Ao mesmo tempo, foi possível testar taxas bem distintas (ex: 0.75, 0.125, 0.125) permitindo observar o comportamento com operadores dominantes.
 
 \begin{table}[!t]
 \renewcommand{\arraystretch}{1.3}
@@ -300,7 +300,22 @@ Taxas de Reprodução, \\Crossover e Mutação & Combinações de 0.125, 0.25, \
 \section{Resultados}
 
 \subsection{Operadores Clássicos}
-A aplicação do operador clássico de crossover de um ponto não foi possível devidos aos problemas descritos da seção II C. Assim, o teste foi restrito aos operadores de mutação e de reprodução. 
+A aplicação do operador clássico de crossover de um ponto não foi possível devidos aos problemas descritos da seção II C. Assim, o teste foi restrito aos operadores de mutação e de reprodução. Após o tuning dos parâmetros, os melhores resultados foram obtidos para taxas de mutação = 0.625, taxa de reprodução = 0.375, e tamanho de população = 4096 (máximo).\\
+Em todas as execuções o critério de parada foi número de gerações = 100.
+
+A fim de avaliar melhor o comportamento da solução também foram realizadas execuções com o operador de elistismo desligado. É possível verificar que a média de fitness da população varia bastante, característica de uma solução muito aleatória. Os melhores resultados no entano, foram obtidos com elitismo ligado. Também foi possível observar pela figura \ref{classical} que o algoritmo não melhora significantemente após as primeiras gerações. Os motivos serão discutidos na seção IV.
+
+\begin{figure*}[!t]
+\centering
+\subfloat[Instância B-n31-k5]{\includegraphics[width=3.5in]{classical_B-n31-k5}%
+\label{classical_B-n31-k5}}
+\hfil
+\subfloat[Instância A-n80-k10]{\includegraphics[width=3.5in]{classical_A-n80-k10}%
+\label{classical_A-n80-k10}}
+\caption{Evolução para Operadores Clássicos.}
+\label{classical}
+\end{figure*}
+
 
 A Tabela \ref{table_classical_operators} mostra os melhores valores de fitness obtidos para os operadores clássicos.
 
@@ -313,15 +328,21 @@ A Tabela \ref{table_classical_operators} mostra os melhores valores de fitness o
 \hline
 Instância de Teste & Valor Obtido & Dif. do Ótimo (\%)\\
 \hline
-A-n32-k5 & 887 & 12\\
-B-n31-k5 & 778 & 14\\
-P-n16-k8 & 478 & 9\\
-A-n80-k10 & 3458 & 49\\
+A-n32-k5 & 923 & 15\\   % 784
+B-n31-k5 & 709 & 5\\    % 672
+P-n16-k8 & 451 & 4\\    % 435
+A-n80-k10 & 3030 & 42\\ % 1763
 \hline
 \end{tabular}
 \end{table}
 
+
 \subsection{Simple Random Mutation/Crossover}
+Na segunda parte do trabalho foram aplicados os operadores SRM e SRC descritos nas seções 2D e 2E. Após o tuning dos parâmetros, os melhores resultados foram obtidos para taxas de mutação = 0.125, taxa de crossover = 0.625, taxa de reprodução = 0.25, e tamanho de população = 4096 (máximo). Baseado nas experiências da parte I, a técnica de elitismo foi mantido ligada.\\
+Em todas as execuções o critério de parada foi número de gerações = 100.
+
+
+
 A Tabela \ref{table_srm} mostra os melhores valores de fitness obtidos para SMR/SRC.
 
 \begin{table}[!t]
@@ -333,15 +354,18 @@ A Tabela \ref{table_srm} mostra os melhores valores de fitness obtidos para SMR/
 \hline
 Inst. & Valor Obtido & Dif. do Ótimo (\%)\\
 \hline
-A-n32-k5 & 1004 & 22\\
-B-n31-k5 & 747 & 10\\
-P-n16-k8 & 461 & 6\\
-A-n80-k10 & 3755 & 53\\
+A-n32-k5 & 1004 & 22\\  % 784
+B-n31-k5 & 747 & 10\\   % 672
+P-n16-k8 & 461 & 6\\    % 435
+A-n80-k10 & 3755 & 53\\ % 1763
 \hline
 \end{tabular}
 \end{table}
 
+\newpage
+
 \subsection{Operador de Correção + Simple Random Mutation/Crossover}
+
 A Tabela \ref{table_correction} mostra os melhores valores de fitness obtidos para RO + SMR/SRC.
 
 \begin{table}[!t]
@@ -367,9 +391,9 @@ Aquela que obteve melhores resultados foi a Simple Random Mutation/Crossover com
 
 Uma possível explicação para o desempenho ruim de SRC/SRM é que são geradas muitas soluções infactíveis. Em um cenário que indivíduos pais são boas soluções, muito provavelmente cada veículo da rota está cheio. A aplicação de \textit{BestInsertion} muito provavelmente levará à solução infactível. 
 
-Quanto aos operadores clássicos de crossover e mutação, eles claramente não são puramente aplicáveis ao problema. É difícil criar novos indivíduos válidos a partir do crossover de um ponto, fazendo do operador de mutação (permutação) a unica opção aplicável. No entanto, observou-se que isso causa muita aleatoriedade nas soluções e contribui para que ela não converja facilmente para o ótimo.
+Quanto aos operadores clássicos de crossover e mutação, eles claramente não são puramente aplicáveis ao problema. É difícil criar novos indivíduos válidos a partir do crossover de um ponto, fazendo do operador de mutação (permutação) a unica opção aplicável. No entanto, observou-se que isso causa muita aleatoriedade nas soluções e contribui para que ela não converja facilmente para o ótimo. O uso de apenas mutação e reprodução faz com que as gerações futuras não combinem diferentes boas soluções, que é a grande vantagem do crossover.
 
-Por fim, é possível avaliar que a aplicação do operador de correção fez melhorar os resultados. Essa técnica é bastante adequada para uso com SRC e SRM, uma vez que tenta melhorar soluções infactíveis. No entanto, a simples aplicação desta técnica não resolve todos os problemas. Este algoritmo não garante que a solução se torna factível.
+Por fim, é possível avaliar que a aplicação do operador de correção fez melhorar os resultados. Essa técnica é bastante adequada para uso com SRC e SRM, uma vez que tenta melhorar soluções infactíveis. No entanto, a simples aplicação desta técnica não resolve todos os problemas, pois não garante que a solução se torne factível.
 
 % For peer review papers, you can put extra information on the cover
 % page as needed:
